@@ -10,7 +10,7 @@
 "Release" 
 "SimDebug_SH-2" 
 [CURRENT_CONFIGURATION]
-"Debug" 
+"SimDebug_SH-2" 
 [CURRENT_SESSION]
 "DefaultSession" 
 [GENERAL_DATA_PROJECT]
@@ -25,7 +25,7 @@
 "DefaultSession" 
 "SimSessionSH-2" 
 [GENERAL_DATA_CONFIGURATION_SimDebug_SH-2]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "FALSE" 
 [SESSIONS_SimDebug_SH-2]
 "DefaultSession" 
 "SimSessionSH-2" 

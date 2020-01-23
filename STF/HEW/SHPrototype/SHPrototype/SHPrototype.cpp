@@ -79,7 +79,7 @@ using namespace stf;
 
 void main(void)
 {
-	cout << "h";
+//	cout << "h";
 	SCI sci;
 	
 	// Test of Time
