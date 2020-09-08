@@ -1,7 +1,7 @@
 /**
  * @file   DummyGPS.h
  * @brief  TLEのアップリンクで軌道情報を保持するGPSダミー．
- *
+ * GPS dummy holding orbit information on TLE uplink
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -17,9 +17,9 @@ namespace core {
 namespace devicedriver {
 namespace gps {
 
-//! TLEのアップリンクで軌道情報を保持するGPSダミー．
+//! TLEのアップリンクで軌道情報を保持するGPSダミー．TLEのアップリンクで軌道情報を保持するGPSダミー
 /*! 
-	@tparam Env コンポーネントの環境クラス．
+	@tparam Env コンポーネントの環境クラス．Environment class of the component.
 */
 template<class Env>
 class DummyGPS : public GPSBase<Env> {
@@ -27,7 +27,7 @@ public:
 	DummyGPS(){}
 	void set_orbit(const datatype::OrbitInfo& orbit){
 		this->set_value(datatype::TypeConverter::toPositionInfo(orbit));//軌道要素を衛星の6次元状態量に変換
-	}
+	}//Converts orbital elements into 6-dimensional state quantities of satellites
 	~DummyGPS(){}
 private:
 };

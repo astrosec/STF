@@ -17,7 +17,7 @@ namespace magnetometer {
 template <class T>
 class PRISMTAM : public TAMBase<T>{
 public:  
-	// 3-Sigmaで1度精度
+	// 3-Sigmaで1度精度 3-degree accuracy with Sigma
 	PRISMTAM( const datatype::DCM &angle) : TAMBase(angle){}
 	~PRISMTAM(){}
 	virtual void do_update(){}

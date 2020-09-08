@@ -30,13 +30,17 @@ int strcmp(const char *s1, const char *s2)
 
 
 //デバッグ用の特殊化．外部ファイルから1行ずつ読み込み，
+//Specialization for debugging. Read line by line from an external file,
 template<> void PRISMCommandReceiver<environment::Simulator<app::PRISM> >::receive_command(){
 	std::string line;
 
 
 
 	if(this->ifs_ != 0 && !this->ifs_->eof()){
-//		this->ifs_->getline(line);
+		//FBP XXX TODO 
+		//Figure this out
+		//this->ifs_->getline(line);
+		//this->ifs_->getline(
 		
 	}
 

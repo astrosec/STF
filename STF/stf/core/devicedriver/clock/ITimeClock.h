@@ -1,6 +1,7 @@
 /**
  * @file   ITimeClock.h
  * @brief  Time型のカウントが可能であることを示す抽象インターフェース．
+ * An abstract interface indicating that Time type counting is possible.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -17,9 +18,12 @@ namespace devicedriver {
 namespace clock {
 
 //! Time型のカウントが可能であることを示す抽象インターフェース．
+	//Abstract interface that indicates that counting of Time type is possible
 /*! 
 	CPU時刻などのラッパーに使う事ができるインターフェース．
+	//An interface that can be used for wrappers such as CPU time.
 	IDataUpdatable::doUpdateによって時刻情報を更新することを想定している．
+	//It is supposed to update the time information by IDataUpdatable::doUpdate. ．
 */
 class ITimeClock : virtual public IDataUpdatable
 {

@@ -1,7 +1,7 @@
 /**
  * @file   EKF.cpp
  * @brief  ジャイロバイアス推定を行う拡張カルマンフィルタ制御ブロック．
- *
+ *  Extended Kalman filter control block for gyro bias estimation
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -63,6 +63,8 @@ void EKF::init(const EKFParameters &params)
 void EKF::init()
 {
 	//全ての値を初期化する．コンストラクタから呼ぶほか，大マニューバ後やセンサ異常時のリセットにも使える
+	//This initializes all values. Besides calling from the constructor, it can also be used 
+	//for resetting after a large maneuver or when a sensor error occurs
     stf_assert(tau_ != 0);
 
     this->P_ = params_.P0;
@@ -71,6 +73,8 @@ void EKF::init()
     this->dt_ = params_.timestep;
     this->tau_ = params_.tau;
     //w, vからQ,Rを生成
+	//generate Q, R from w, v
+	//Generate Q, R from v
     for(int i = 0; i < 3; i++)
 	{
         Q_[i][i] = params_.w_q * params_.w_q;
@@ -78,13 +82,16 @@ void EKF::init()
         R_[i][i] = params_.v * params_.v;
 	}
     //固定値の行列や初期値が必要な行列に値を代入
+	//Assign values to matrices with fixed values or matrices that require initial values
     //B
     B_[0][0] = B_[1][1] = B_[2][2] = -0.5;
     B_[3][3] = B_[4][4] = B_[5][5] = 1;
     //H 計算負荷削減のため，転置行列も持っておく
+	//Have transposed matrix to reduce calculation load
     H_[0][0] = H_[1][1] = H_[2][2] = 1;
 	Ht_[0][0] = Ht_[1][1] = Ht_[2][2] = 1;
     //A(時変であるΩ以外を初期化しておく)
+	//Initialize other than Ω which is time-varying
     A_[0][3] = A_[1][4] = A_[2][5] = -0.5;
     A_[3][3] = A_[4][4] = A_[5][5] = -1 / this->tau_;
     //F
@@ -94,7 +101,7 @@ void EKF::init()
 
 void EKF::do_compute(const datatype::Time& t)
 {
-	if(this->getLastOutputtime<1>() >= t) return; //伝搬済みなので何もしない
+	if(this->getLastOutputtime<1>() >= t) return; //伝搬済みなので何もしない Do nothing because it has been propagated
 
 	util::Trace trace(util::Trace::kControlBlock, name_);
 
@@ -111,21 +118,24 @@ void EKF::do_compute(const datatype::Time& t)
 void EKF::update_(const datatype::Quaternion &input, const datatype::Time& t)
 {
     q_.normalize();
-    //カルマンゲインの計算
+    //カルマンゲインの計算 Kalman gain calculation
     this->K_ = P_ * Ht_ * ( H_ * P_ * Ht_ + R_ ).inverse();
-    //共分散行列の更新
+    //共分散行列の更新 Update covariance matrix
     P_ = P_ - K_ * H_ * P_;
     //観測量微小量yの計算．観測されたqにモデルから伝搬したqrefの共役を左から掛ける
+	//Calculation of the observed small amount y. Multiply the observed q by 
+	//the conjugate of the qref propagated from the model from the left
     datatype::StaticVector<3> y;
     datatype::Quaternion q_tmp = q_.conjugate() * input;
 
     //q_tmp[0](～1)を省略した3要素で状態量を構成
+	//The state quantity is composed of three elements that omit
     y[0] = q_tmp[1];
     y[1] = q_tmp[2];
     y[2] = q_tmp[3];
-    //xの推定値を更新
+    //xの推定値を更新   Update estimate of x
     x_ = K_ * y;
-    //基準状態量の更新
+    //基準状態量の更新 Update of standard state quantity
     datatype::Quaternion q_update;
     q_update[0] = 1 - x_[0] * x_[0] - x_[1] * x_[1] - x_[2] * x_[2];
     q_update[1] = x_[0];
@@ -134,7 +144,7 @@ void EKF::update_(const datatype::Quaternion &input, const datatype::Time& t)
     q_update.normalize();
 
     q_ = q_ * q_update;
-    q_.normalize();//更新のタイミングで正規化もしておく(TBD)
+    q_.normalize();//更新のタイミングで正規化もしておく(TBD) Normalize at the update timing (TBD)
 
     bref_[0] += x_[3];
     bref_[1] += x_[4];
@@ -149,12 +159,15 @@ void EKF::update_(const datatype::Quaternion &input, const datatype::Time& t)
 void EKF::propagate_(const datatype::StaticVector<3>& omega, const datatype::Time& t)
 {
     //現時点での推定角速度でΩ，Aを更新
+	//Updated Ω and A with the current estimated angular velocity
     this->omega_[0] = omega[0] - this->bref_[0] ;//- this->x_[3];
     this->omega_[1] = omega[1] - this->bref_[1] ;//- this->x_[4];
     this->omega_[2] = omega[2] - this->bref_[2] ;//- this->x_[5];
 
     //状態変数の伝搬
     //ファイルスコープのstatic変数Omegaを現在のインスタンスで更新
+	//Propagation of state variables
+     //Update file scope static variable Omega with current instance
     Omega_[0][1] = -this->omega_[0];
     Omega_[0][2] = -this->omega_[1];
     Omega_[0][3] = -this->omega_[2];
@@ -165,7 +178,7 @@ void EKF::propagate_(const datatype::StaticVector<3>& omega, const datatype::Tim
       for(int j = 0; j < 4; j++)
         if(i > j) Omega_[i][j] = -Omega_[j][i];
 
-    //A, F,Gの更新
+    //A, F,Gの更新 Update A, F, G
     A_[0][1] =  this->omega_[2];
     A_[0][2] = -this->omega_[1];
     A_[1][0] = -this->omega_[2];
@@ -173,13 +186,15 @@ void EKF::propagate_(const datatype::StaticVector<3>& omega, const datatype::Tim
     A_[2][0] =  this->omega_[1];
     A_[2][1] = -this->omega_[0];
     F_ = util::math::exp(A_ * dt_, 3);//TBD:expのマクローリン展開を3次まで取る．t>1のときは粗い近似になってしまう
-    G_ = B_ * dt_ + 0.5 * A_ * B_ * dt_ * dt_;//exp(A(t-tau))を3次まで展開して積分
+	//Take the Maclaurin expansion of TBD:exp up to the third degree. When t>1, it becomes a rough approximation
+    G_ = B_ * dt_ + 0.5 * A_ * B_ * dt_ * dt_;//exp(A(t-tau))を3次まで展開して積分 expand exp(A(t-tau)) to third order and integrate
 
-    //RKでq, bの基準値を伝搬(微小状態量は伝搬しない)
+    //RKでq, bの基準値を伝搬(微小状態量は伝搬しない) Propagate the reference values of q and b in RK 
+	//(small state quantities do not propagate)
     this->q_ += util::math::RungeKutta::slope(q_, 0.5 * Omega_, dt_);
     this->bref_ += util::math::RungeKutta::slope(bref_,-1 / tau_, dt_);
 
-    //共分散行列の伝搬
+    //共分散行列の伝搬 Propagation of covariance matrix
     this->P_ = F_ * P_ * F_.trans() + G_ * Q_ * G_.trans();
 
 	this->outputport<0, datatype::Quaternion>().value_ = this->q_;
@@ -190,7 +205,7 @@ void EKF::propagate_(const datatype::StaticVector<3>& omega, const datatype::Tim
 
 void EKF::reset()
 {
-	//誤差共分散行列のみ初期化する
+	//誤差共分散行列のみ初期化する Initialize error covariance matrix only
 	this->P_ = this->params_.P0; 
 }
 

@@ -20,6 +20,7 @@ namespace strategy {
 namespace control {
 
 //軌道情報と磁場，太陽方向ベクトルからquaternionを出力するPRISMTRIADブロック．
+	//PRISMTRIAD block that outputs quaternion from orbit information, magnetic field, and sun direction vector.
 class PRISMSunMagTRIAD
 	: public SunMagTRIAD
 {

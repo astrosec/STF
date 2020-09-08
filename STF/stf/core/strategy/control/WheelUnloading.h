@@ -1,6 +1,7 @@
 /**
  * @file   WheelUnloading.h
  * @brief  RWのアンローディングをMTQを使用して行うための制御ブロック．
+ //Control block for unloading RW using MTQ.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -30,6 +31,13 @@ namespace control {
 
 	入力:軌道情報
 	出力:RW出力トルク，MTQ出力トルク
+	Control block for unloading RW using MTQ.
+/*!
+In addition to the trajectory information required to calculate the output torque direction,
+Apart from the port, it is necessary to directly connect the target wheel to refer to the angular momentum.
+
+Input: Orbit information
+Output: RW output torque, MTQ output torque
 */
 template<class Env>
 class WheelUnloading
@@ -71,6 +79,7 @@ WheelUnloading<Env>::WheelUnloading(
 template<class Env>
 void WheelUnloading<Env>::do_compute(const datatype::Time& t) {
 	//if(t <= this->last_update_) return; //既に別のブロック経由で更新済みなら再計算しない
+	//Do not recalculate if already updated via another block
 	util::Trace trace(util::Trace::kControlBlock, name_);
 	//this->last_update_ = t;
 }

@@ -30,6 +30,8 @@ void ModeManagerBase::notify(const mode::Mode* value){
 
 void ModeManagerBase::run()
 {
+	printf(this->name_.to_char());
+	printf("\n");
 	util::Trace trace(util::Trace::kManager, "run ModeManager");
 }
 

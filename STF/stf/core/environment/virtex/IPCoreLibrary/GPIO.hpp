@@ -209,6 +209,7 @@ namespace nj
       AccessControl<AC> ac_obj;
 	
       // 初期状態は不用意な事故を避けるため、すべてのGPIOピンを入力とする。
+	  //In the initial state, all GPIO pins are input to avoid accidents.
       GPIO_TRI_ = 0xffffffff;
     }
 

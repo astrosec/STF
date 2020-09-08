@@ -1,6 +1,7 @@
 /**
  * @file   MessageCommand.h
  * @brief  予め決められたメッセージを出力するコマンド．
+ * A command that outputs a predetermined message
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -17,9 +18,10 @@ namespace stf {
 namespace core {
 namespace command {
 
-//! 予め決められたメッセージを出力するコマンド．
+//! 予め決められたメッセージを出力するコマンド．A command that outputs a predetermined message
 /*! コンストラクタで指定したメッセージをそのまま返答する．生存確認や，
-	@tparam Num 実行するコマンドの数．
+//The message specified in the constructor is returned as is. Confirmation of survival
+	@tparam Num 実行するコマンドの数．Number of commands to execute
 */
 class MessageCommand : public Command {
 public:

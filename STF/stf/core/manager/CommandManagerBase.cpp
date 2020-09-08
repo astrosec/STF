@@ -16,6 +16,8 @@ namespace core {
 namespace manager {
 
 void CommandManagerBase::run(){
+	printf(this->name_.to_char());
+	printf("\n");
 	execute_command_(this->clock_->get_time());
 }
 
@@ -23,6 +25,8 @@ void CommandManagerBase::execute_command_(const datatype::Time& t){
 	util::Trace trace(util::Trace::kManager, "run CommandManager");
 	//実装はリングバッファだが，実装しやすいのでコマンドの確認順序は配列の後ろから
 	//実行順序に制約のあるコマンドはトランザクションとして実装するので問題は無いはず
+	//Implementation is a ring buffer, but since it is easy to implement, the command confirmation order is from the back of the array.
+    //There should be no problem because commands with execution order restrictions are implemented as transactions
 	for(int i = NUM_OF_LIST - 1 ; i >= 0 ; i--){
 		if(this->commandList_[i] == 0) continue;
 		if(this->commandList_[i]->can_execute(t)){

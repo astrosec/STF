@@ -19,6 +19,7 @@ namespace strategy {
 namespace control {
 
 //TRIAD共通の計算を無名名前空間に纏める．
+	//Combine common TRIAD calculations into an anonymous namespace
 namespace {
 datatype::Quaternion estimate_(
 	datatype::StaticVector<3> v1, datatype::StaticVector<3> v2, 
@@ -61,6 +62,7 @@ TRIAD::TRIAD(
 
 void TRIAD::do_compute(const datatype::Time& t) {
 	if(t <= this->last_update_) return; //既に別のブロック経由で更新済みなら再計算しない
+	//Do not recalculate if already updated via another block
 	util::Trace trace(util::Trace::kControlBlock, name_);
 
 	datatype::StaticVector<3> v1 = datatype::TypeConverter::toRectangular(
@@ -99,13 +101,13 @@ SunEarthTRIAD::SunEarthTRIAD(
 
 void SunEarthTRIAD::do_compute(const datatype::Time& t) {
 	if(t <= this->last_update_) return; //既に別のブロック経由で更新済みなら再計算しない
-
+	//Do not recalculate if already updated via another block
 	util::Trace trace(util::Trace::kControlBlock, name_);
 
-	//センサから取得した衛星基準座標系における地球，太陽方向
+	//センサから取得した衛星基準座標系における地球，太陽方向 Earth and sun directions in the satellite reference coordinate system obtained from sensors
 	datatype::StaticVector<2> w_sun = this->source<0, datatype::StaticVector<2>>().get_value(t);
 	datatype::StaticVector<2> w_earth = this->source<1, datatype::StaticVector<2>>().get_value(t);
-	//軌道情報をもとに計算された衛星位置における地球，太陽方向
+	//軌道情報をもとに計算された衛星位置における地球，太陽方向 Earth and sun directions at satellite positions calculated based on orbit information
 	datatype::StaticVector<3> v1 = datatype::OrbitCalc::getSunDirection3D(this->source<3, datatype::DateTime>().get_value(t));
 	datatype::StaticVector<3> v2 = datatype::OrbitCalc::getEarthDirection3D(this->source<2, datatype::PositionInfo>().get_value(t));
 
@@ -135,13 +137,15 @@ SunMagTRIAD::SunMagTRIAD(
 
 void SunMagTRIAD::do_compute(const datatype::Time& t) {
 	if(t <= this->last_update_) return; //既に別のブロック経由で更新済みなら再計算しない
-
+	//Do not recalculate if already updated via another block
 	util::Trace trace(util::Trace::kControlBlock, name_);
 
-	//センサから取得した衛星基準座標系における地球，太陽方向
+	//センサから取得した衛星基準座標系における地球，太陽方向 
+	//Earth and sun directions in the satellite reference coordinate system obtained from sensors
 	datatype::StaticVector<2> w_sun = this->source<0, datatype::StaticVector<2>>().get_value(t);
 	datatype::MagneticField w_mag = this->source<1, datatype::MagneticField>().get_value(t);
-	//軌道情報をもとに計算された衛星位置における地球，太陽方向
+	//軌道情報をもとに計算された衛星位置における地球，太陽方向 
+	//Earth and sun directions at satellite positions calculated based on orbit information
 	datatype::DateTime time = this->source<3, datatype::DateTime>().get_value(t);
 
 	datatype::MagneticField v_mag = 
@@ -172,12 +176,15 @@ SunMagTRIAD2::SunMagTRIAD2(
 
 void SunMagTRIAD2::do_compute(const datatype::Time& t) {
 	if(t <= this->last_update_) return; //既に別のブロック経由で更新済みなら再計算しない
+	//Do not recalculate if already updated via another block
 	util::Trace trace(util::Trace::kControlBlock, name_);
 
 	//センサから取得した衛星基準座標系における地球，太陽方向
+	//Earth and sun directions in the satellite reference coordinate system obtained from sensors
 	datatype::StaticVector<2> w_sun = this->source<0, datatype::StaticVector<2>>().get_value(t);
 	datatype::MagneticField w_mag = this->source<1, datatype::MagneticField>().get_value(t);
 	//軌道情報をもとに計算された衛星位置における地球，太陽方向
+	//Earth and sun directions at satellite positions calculated based on orbit information
 	datatype::DateTime time = this->clock_->get_datetime();
 
 	datatype::MagneticField v_mag = 

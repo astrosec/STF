@@ -1,6 +1,6 @@
 /**
  * @file   Time.h
- * @brief  経過時間を表すクラス．
+ * @brief  経過時間を表すクラス．//A class that represents elapsed time.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -12,8 +12,9 @@
 namespace stf { 
 namespace datatype {
 
-//! 経過時間を表すクラス．
+//! 経過時間を表すクラス．//A class that represents elapsed time.
 /*! 正の時間（seconds >= 0）のみ対応しているため，コンストラクタに負値を与えたときの挙動は不定 */
+	/*Since only positive time (seconds >= 0) is supported, the behavior when a negative value is given to the constructor is undefined*/
 class Time {
 public:
 	Time() : seconds_(0), milliseconds_(0) {}
@@ -93,7 +94,7 @@ inline double Time::total_seconds() const
 
 inline Time &Time::operator+=(const Time &rhs){
     this->milliseconds_ += rhs.milliseconds_;
-    if(this->milliseconds_ > 1000.0){//桁上がり
+    if(this->milliseconds_ > 1000.0){//桁上がり//Carry
         this->seconds_ ++;
         this->milliseconds_ -= 1000;
     }else if(this->milliseconds_ < 0.0){
@@ -107,7 +108,7 @@ inline Time &Time::operator+=(const Time &rhs){
 
 inline Time &Time::operator-=(const Time &rhs){
     this->milliseconds_ -= rhs.milliseconds_;
-    if(this->milliseconds_ > 1000.0){//桁上がり
+    if(this->milliseconds_ > 1000.0){//桁上がり//Carry
         this->seconds_ ++;
         this->milliseconds_ -= 1000;
     }else if(this->milliseconds_ < 0.0){

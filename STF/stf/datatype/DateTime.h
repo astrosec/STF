@@ -1,6 +1,7 @@
 /**
  * @file   DateTime.h
  * @brief  ユリウス暦による絶対時刻を保持するクラス．時間間隔などの計算にはTimeを使う．
+ * A class that holds absolute time according to the Julian calendar. Use Time to calculate time intervals.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -14,6 +15,7 @@ namespace stf {
 namespace datatype {
 
 //! グレゴリオ暦による絶対時刻を秒精度で保持する．
+	//Holds absolute time according to Gregorian calendar with second precision.
 /*! */
 class DateTime {
 public:

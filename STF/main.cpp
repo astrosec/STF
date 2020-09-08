@@ -65,6 +65,11 @@ int main(void){
 	util::Trace::enable(util::Trace::kDataPool);
 
 	util::Trace tr(util::Trace::kManager, "man");
+	util::Trace tr1(util::Trace::kControlBlock, "con");
+	util::Trace tr2(util::Trace::kCommand, "com");
+	util::Trace tr3(util::Trace::kEvent, "eve");
+	util::Trace tr4(util::Trace::kDataPool, "dat");
+
 
 	std::cout << "AOCS Framework Test Program:\n\n";
 
@@ -80,40 +85,73 @@ int main(void){
 	//stf::factory::SatelliteFactory<ENV>* en2 = new stf::factory::NJFactory<ENV>();
 	stf::Global<NJSimulator>* gl2 = stf::core::factory::NJFactory<NJSimulator>::getInstance().create();
 
+	//FBP
 	//stf::factory::SatelliteFactory<ENV>* en3 = new stf::factory::SimpleSatelliteFactory<ENV>();
 	//stf::Global<ENV>* gl3 = stf::core::factory::SimpleSatelliteFactory<ENV>::getInstance().create();
 
-	//シミュレータの生成
+	//シミュレータの生成 //Simulator generation
 	NJSimulator& s = NJSimulator::get_instance();
-	//シミュレーション用の軌道情報
+	//シミュレーション用の軌道情報  Orbit information for simulation
 	datatype::OrbitInfo orbit(7100000, 0.01, 0, 0.5 * util::math::PI, 0, 0);
-	//シミュレータ初期化
+	//シミュレータ初期化 Simulator initialization
 	s.init(gl2, stf::app::NJ::steptime, 100, orbit, new std::ofstream("output.csv"));
+
+	//FBP
+	//シミュレータの生成 //Simulator generation
+	PRISMSimulator& s1 = PRISMSimulator::get_instance();
+	//シミュレーション用の軌道情報  Orbit information for simulation
+	datatype::OrbitInfo orbit1(7100000, 0.01, 0, 0.5 * util::math::PI, 0, 0);
+	//シミュレータ初期化 Simulator initialization
+	s1.init(gl, stf::app::PRISM::steptime, 100, orbit1, new std::ofstream("output.csv"));
+	//FBP
+
 	
-	//シミュレータ外乱設定
+	//シミュレータ外乱設定  Simulator disturbance setting
 	datatype::StaticVector<3> v;
 	v[0] = 0.3;
 	v[1] = -0.2;
 	s.attachNoiseSource(new stf::core::environment::torquesource::ImpulseNoise(3, v, 0, 3000,&s));
     s.attachNoiseSource(new stf::core::environment::torquesource::WhiteNoise(0.01, 0));
 
+	//FBP
+	s1.attachNoiseSource(new stf::core::environment::torquesource::ImpulseNoise(3, v, 0, 3000,&s));
+    s1.attachNoiseSource(new stf::core::environment::torquesource::WhiteNoise(0.01, 0));
+	//FBP
+
 	datatype::List<core::manager::ManagerBase>::iterator it,end;
 	end	= gl2->get_function_manager()->end();
+
+	//FBP
+	datatype::List<core::manager::ManagerBase>::iterator it1,end1;
+	end1	= gl->get_function_manager()->end();
+	//FBP
+
 
 	for(it = gl2->get_function_manager()->begin(); it != end; ++it){
 		(*it).run();
 	}
 
-	//実行タスクの追加
+	//FBP
+	for(it1 = gl->get_function_manager()->begin(); it1 != end1; ++it1){
+		(*it1).run();
+	}
+	//FBP
 
-	//そのほかの設定
+	//実行タスクの追加  Add execution task
+
+	//そのほかの設定  Other settings
+	// Add execution task // Other settings
 	//g.comm->add_command(new core::command::modeChangeCommand(g.get_global_time(), g.missionmode, g.modeman));
 	//g.modeman->change_mode(g.safemode);
 
 	///////////////////////////////////////////////
-	// 実行
-	for(int i = 0; i < 800; i++)
+	// 実行 Execute
+	//for(int i = 0; i < 800; i++)
+	while(1)
+	{
 		s.runOneCycle();
+		s1.runOneCycle();
+	}
 
 	return 1;
 }

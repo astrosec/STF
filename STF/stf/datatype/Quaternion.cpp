@@ -1,6 +1,7 @@
 /**
  * @file   Quaternion.cpp
  * @brief  4元数を表現するクラス．
+ *			A class that represents a quaternion.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -23,6 +24,7 @@ void Quaternion::normalize()
 double Quaternion::norm(int n) const 
 {
 	stf_assert((n == 1) || (n == 2));//計算負荷の問題から今は1，2次のノルムしかとらない
+									//Due to the problem of computational load, only the norm of the 1st and 2nd order is taken now
 	double value = 0.0;
 	if(n == 1){
 		for(int i = 0; i < 4; i++)

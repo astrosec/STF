@@ -1,6 +1,6 @@
 /**
  * @file   String.h
- * @brief  std::stringの簡略版クラス．
+ * @brief  std::stringの簡略版クラス．//A simplified version of.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -11,7 +11,7 @@
 namespace stf {
 namespace datatype {
 
-//! std::stringの簡略版．
+//! std::stringの簡略版．//A simplified version of.
 /*! */
 class String {
 public:

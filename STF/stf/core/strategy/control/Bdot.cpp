@@ -1,7 +1,7 @@
 /**
  * @file   Bdot.cpp
  * @brief  B-Dot則を計算する制御ブロック．
- *
+ * A control block that calculates the B-Dot rule.
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -27,6 +27,7 @@ Bdot::Bdot(double k,
 
 void Bdot::do_compute(const datatype::Time& t) {
 	if(t <= this->last_update_) return; //既に別のブロック経由で更新済みなら再計算しない
+	//Do not recalculate if already updated via another block
 	util::Trace trace(util::Trace::kControlBlock, name_);
 	this->source<0, datatype::MagneticField>().get_value(t);
 

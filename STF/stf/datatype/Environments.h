@@ -1,6 +1,6 @@
 /**
  * @file   Environments.h
- * @brief  回路上の物理量を表すクラス群．
+ * @brief  回路上の物理量を表すクラス群．//A class group that represents physical quantities on a circuit.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -14,7 +14,7 @@
 namespace stf { 
 namespace datatype {
 
-//! 電流を表すクラス．
+//! 電流を表すクラス．//Class that represents current
 /*! */
 class Current : public Scalar {
 public:
@@ -27,7 +27,7 @@ public:
 private:
 };
 
-//! 電圧を表すクラス．
+//! 電圧を表すクラス．//Class that represents voltage
 /*! */
 class Voltage : public Scalar {
 public:
@@ -40,7 +40,7 @@ public:
 private:
 };
 
-//! 温度を表すクラス．
+//! 温度を表すクラス．//Class that represents temperature
 /*! */
 class Temperature : public Scalar {
 public:

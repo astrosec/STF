@@ -20,7 +20,8 @@ template<class T>
 class PRISMMTQ : public MTQBase<T> {
 public:
 	~PRISMMTQ(){}
-	//1Nm出力，線形性誤差5％
+	//1Nm出力，線形性誤差5％ 1Nm output, linear error 5%
+	//1Nm output, linear error 5% 1Nm output, linear error 5%
 	PRISMMTQ( const datatype::DCM &angle) : MTQBase(angle, 1, -1, 5){}
 	virtual void do_update(){}
 private:

@@ -1,7 +1,7 @@
 /**
  * @file   Exp.h
  * @brief  行列の指数関数を計算する関数．
- *
+ * A function that calculates the exponential function of a matrix.
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -17,9 +17,13 @@ namespace util {
 namespace math {
 
 //! 行列の指数をn次のマクローリン展開まで計算して返す関数．
+//Function that computes and returns the exponent of a 
+//matrix up to the n-th order Maclaurin expansion
 datatype::Matrix exp(const datatype::Matrix& m, int n);
 
 //! 行列の指数を4次のマクローリン展開まで計算して返す関数．
+//A function that computes and returns the exponent of
+//a matrix up to the fourth-order Maclaurin expansion
 datatype::Matrix exp(const datatype::Matrix& m);
 
 //! 行列の指数をn次のマクローリン展開まで計算して返す関数．

@@ -1,6 +1,7 @@
 /**
  * @file   Includes.h
  * @brief  制御ブロックの一括インクルード用ファイル．
+ * File for batch inclusion of control blocks
  *
  * @author Taiga Nomi
  * @date   2011.02.16

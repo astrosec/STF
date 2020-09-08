@@ -1,6 +1,7 @@
 /**
  * @file   IAbsoluteTimeClock.h
  * @brief  DateTime型のカウントが可能であることを示す抽象インターフェース．
+ * An abstract interface indicating that types can be counted.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -17,9 +18,12 @@ namespace devicedriver {
 namespace clock {
 
 //! DateTime型のカウントが可能であることを示す抽象インターフェース．
+	//Abstract interface indicating that DateTime type count is possible
 /*! 
 	GPSやRTCのラッパーに使う事ができるインターフェース．
 	IDataUpdatable::doUpdateによって時刻情報を更新することを想定している．
+	An interface that can be used as a wrapper for GPS and RTC.
+It is supposed to update the time information by IDataUpdatable::doUpdate.
 */
 class IAbsoluteTimeClock : virtual public IDataUpdatable
 {

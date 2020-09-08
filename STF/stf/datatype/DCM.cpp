@@ -1,6 +1,7 @@
 /**
  * @file   DCM.cpp
  * @brief  Z-Y-Xの順で回転させる回転行列（DCM）．
+ * Rotation matrix (DCM) that rotates in the order of Z-Y-X
  *
  * @author Taiga Nomi
  * @date   2011.02.16

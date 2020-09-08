@@ -1,7 +1,7 @@
 /**
  * @file   SatelliteFactory.h
  * @brief  衛星ファクトリの基底クラス．
- *
+ *  Base class for satellite factories.
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -92,31 +92,42 @@ public:
 		return return_created_object();
 	}
 protected:
-	//! デバイスドライバを生成するファクトリ
+	//! デバイスドライバを生成するファクトリ Factory that creates device 
+	//drivers
 	virtual void create_component() = 0;
-	//! 機能マネージャを生成するファクトリ
+	//! 機能マネージャを生成するファクトリ Factory that creates the feature 
+	//manager
 	virtual void create_funcmanager() = 0;
-	//! モードを生成するファクトリ
+	//! モードを生成するファクトリ The factory that creates the mode
 	virtual void create_mode() = 0;
-	//! 各モードにおけるControl Strategyを生成するファクトリ
+	//! 各モードにおけるControl Strategyを生成するファクトリ Factory that 
+	//generates Control Strategy in each mode
 	virtual void create_controller() = 0;
-	//! Commandを生成するファクトリ
+	//! Commandを生成するファクトリ The factory that creates the Command
 	virtual void create_command() = 0;
-	//! 各モードにおけるTelemetry Strategyを生成するファクトリ
+	//! 各モードにおけるTelemetry Strategyを生成するファクトリ Factory that 
+	//creates Telemetry Strategy for each mode
 	virtual void create_telemetry() = 0;
-	//! 各モードにおけるFunctor Strategyを生成するファクトリ
+	//! 各モードにおけるFunctor Strategyを生成するファクトリ Factory that 
+	//generates Functor Strategy in each mode
 	virtual void create_functor() = 0;
-	//! 各モードにおけるUpdate Strategyを生成するファクトリ
+	//! 各モードにおけるUpdate Strategyを生成するファクトリ Factory that 
+	//generates Update Strategy in each mode
 	virtual void create_dataupdates() = 0;
-	//! 各モードにおけるSwitch Strategyを生成するファクトリ
+	//! 各モードにおけるSwitch Strategyを生成するファクトリ Factory that 
+	//generates Switch Strategy in each mode
 	virtual void create_switches() = 0;
-	//! 各モードにおけるユーザー定義のStrategyを生成するファクトリ
+	//! 各モードにおけるユーザー定義のStrategyを生成するファクトリ Factory
+	//that generates user-defined Strategy in each mode
 	virtual void create_additional_hotspot() = 0;
-	//! データプールへの接続を生成するファクトリ
+	//! データプールへの接続を生成するファクトリ A factory that creates a 
+	//connection to the datapool
 	virtual void create_datapool() = 0;
-	//! 最初のモード指定など，衛星固有の初期化処理を実行．
+	//! 最初のモード指定など，衛星固有の初期化処理を実行． Performs satellite-
+	//specific initialization processing such as first mode specification.
 	virtual void satellite_initialize() = 0;
-	//! 生成されたオブジェクトを、Globalのポインタで返却
+	//! 生成されたオブジェクトを、Globalのポインタで返却 Return the created 
+	//object with a Global pointer
 	virtual Global<Env>* return_created_object() = 0;
 
 	SatelliteFactory() : is_created_(false){}

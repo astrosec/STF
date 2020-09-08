@@ -32,6 +32,7 @@ protected:
 
 
 // PRISMのテレメトリに必要なEKFのテレメトリ出力を定義。
+//Defines EKF telemetry output required for PRISM telemetry.
 template<int SCALE>
 class PRISMEKFIterator : public PRISMIteratorBase<SCALE, 13, core::strategy::control::PRISMEKF> {
 public:
@@ -45,6 +46,7 @@ private:
 };
 
 // PRISMのテレメトリに必要なEKFのテレメトリ出力を定義。
+//Defines EKF telemetry output required for PRISM telemetry.
 template<int SCALE>
 class PRISMRMMEKFIterator : public PRISMIteratorBase<SCALE, 3, core::strategy::control::PRISMRMMEKF> {
 public:
@@ -56,6 +58,7 @@ private:
 };
 
 // TRIADからQuaternionの推定値をテレメトリとして出力．
+//Output the estimated value of Quaternion from TRIAD as telemetry.
 template<int SCALE>
 class PRISMSunMagTRIADIterator : public PRISMIteratorBase<SCALE, 4, core::strategy::control::PRISMSunMagTRIAD> {
 public:

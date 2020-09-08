@@ -22,6 +22,8 @@ void UnitManagerBase::notify(const mode::Mode* newmode)
 
 void UnitManagerBase::run()
 {
+	printf(this->name_.to_char());
+	printf("\n");
 	util::Trace trace(util::Trace::kManager, "run UnitManager");
 	if(unit_list_ == 0){
 		trace.debug("skip");

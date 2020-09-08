@@ -31,6 +31,8 @@ namespace cmhandler {
 //
 // 通信系CPUとのインターフェースを成すコマンドレシーバのデバッグ用具象クラス．
 //  プル型のコマンド（通信系からの要求をもとに，適切な値を返す）に対しては
+	//// Concrete class for debugging the command receiver that forms the interface with the communication CPU.
+// For pull-type commands (returning an appropriate value based on the request from the communication system)
 template<class T>
 class NJCommandReceiver: virtual public ICommandReceiver, public RootObject {
 public:
@@ -49,17 +51,18 @@ private:
 	typename T::InputFileStream* ifs_;
 };
 
-//外部デバイスからコマンドの受信を行う．
+//外部デバイスからコマンドの受信を行う．Receives commands from external devices.
 template<class T>
 void NJCommandReceiver<T>::receive_command()
 {
 }
 
-//デバッグ用の特殊化．外部ファイルから1行ずつ読み込み，
+//デバッグ用の特殊化．外部ファイルから1行ずつ読み込み，Specialization for debugging. Read line by line from an external file,
 template<> void NJCommandReceiver<environment::Simulator<app::NJ> >::receive_command();
 
 
 // デバッグ用なので送信機に送る変わりにコンソールに出力する
+//Because it is for debugging, output to the console instead of sending to the transmitter
 template<class T>
 void NJCommandReceiver<T>::send_packet(const datatype::String& msg)
 {
@@ -67,6 +70,7 @@ void NJCommandReceiver<T>::send_packet(const datatype::String& msg)
 }
 
 // デバッグ用なので送信機に送る変わりにコンソールに出力する
+//Because it is for debugging, output to the console instead of sending to the transmitter
 template<class T>
 void NJCommandReceiver<T>::send_packet(int msg)
 {

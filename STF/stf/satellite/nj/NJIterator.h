@@ -29,6 +29,7 @@ protected:
 };
 
 // NJのテレメトリに必要なEKFのテレメトリ出力を定義。
+//Defines EKF telemetry output required for NJ telemetry.
 template<int SCALE>
 class NJEKFIterator : public NJIteratorBase<SCALE, 13, core::strategy::control::NJEKF> {
 public:
@@ -42,6 +43,7 @@ private:
 };
 
 // NJのテレメトリに必要なEKFのテレメトリ出力を定義。
+//Defines EKF telemetry output required for NJ telemetry.
 template<int SCALE>
 class NJRMMEKFIterator : public NJIteratorBase<SCALE, 3, core::strategy::control::NJRMMEKF> {
 public:
@@ -53,6 +55,7 @@ private:
 };
 
 // TRIADからQuaternionの推定値をテレメトリとして出力．
+//Output the estimated value of Quaternion from TRIAD as telemetry.
 template<int SCALE>
 class NJSunMagTRIADIterator : public NJIteratorBase<SCALE, 4, core::strategy::control::NJSunMagTRIAD> {
 public:

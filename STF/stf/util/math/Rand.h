@@ -53,7 +53,7 @@ inline double Noise(){
 
 inline double WhiteNoise(double sigma, double mu){
     const double PI = 3.14159265358979323846;
-    //Box-Muller transformで正規乱数を生成
+    //Box-Muller transformで正規乱数を生成Generate a normal random number with
     double u1 = 0.0;
     while(-log(u1) >= (DBL_MAX / 2)){
         u1 = (double)rand() / RAND_MAX;

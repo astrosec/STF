@@ -1,6 +1,7 @@
 /**
  * @file   NJ.h
  * @brief  アプリケーション固有のパラメータ宣言
+ * Application-specific parameter declarations
  *
  * @author Taiga Nomi
  * @date   2011.04.09

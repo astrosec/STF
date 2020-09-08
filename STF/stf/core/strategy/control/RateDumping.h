@@ -1,6 +1,7 @@
 /**
  * @file   RateDumping.h
  * @brief  レートダンピング則による3軸独立のトルク計算を行う制御ブロック．
+ * Control block for 3-axis independent torque calculation based on rate damping law
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -22,10 +23,21 @@ namespace strategy {
 namespace control {
 
 //! レートダンピング則による3軸独立のトルク計算を行う制御ブロック．
-/*! 
+/*! Control block for 3-axis independent torque calculation based on rate damping law
 	3軸それぞれに角速度PIDを適用する．クロスカップリング項が無視できない場合，CouplingCompensationブロックを併用して打ち消す必要がある
 	入力:3軸角速度
 	出力:3軸トルク
+	The angular velocity PID is applied to each of the three axes. If the cross-coupling term cannot be ignored, it is necessary to cancel it by using the Coupling Compensation block together.
+Input: 3-axis angular velocity
+Output: 3-axis torque
+	/*
+	A control block that performs independent torque calculation for three axes based on the rate damping law.
+
+The angular velocity PID is applied to each of the three axes. If the cross-coupling term cannot be ignored,
+it is necessary to cancel it by using the Coupling Compensation block together.
+Input: 3-axis angular velocity
+Output: 3-axis torque
+
 */
 class RateDumping : public StrategyBase,
 	public devicedriver::InputPorts< TYPELIST_1(datatype::StaticVector<3>)>,

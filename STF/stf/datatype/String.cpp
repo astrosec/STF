@@ -1,6 +1,6 @@
 /**
  * @file   String.cpp
- * @brief  std::stringの簡略版クラス．
+ * @brief  std::stringの簡略版クラス．//A simplified version of.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -19,6 +19,7 @@ int strlen(const char* s){
 }
 
 //文字列コピー関数．s1, s2のアドレスが重複していた場合の動作は未定義．
+//String copy function. Operation is undefined if the addresses of s1 and s2 are duplicated.
 char *strcpy(char * s1, const char * s2)
 {
   for (register char *ss = s1; (*ss = *s2) != '\0'; ss++, s2++)
@@ -100,7 +101,7 @@ String &String::operator+=(const String &s){
 
 String &String::operator=(const String &rhs){
    if (this == &rhs)
-        return *this;   // string = string の場合
+        return *this;   // string = string の場合 //in the case of
 
     delete [] value_;
 

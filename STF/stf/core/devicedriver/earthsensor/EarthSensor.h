@@ -1,7 +1,7 @@
 /**
  * @file   EarthSensor.h
  * @brief  ソフトウェアシミュレーションレベルで動作する地球センサドライバ．
- *
+ *Earth sensor driver operating at software simulation level
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -16,13 +16,14 @@ namespace devicedriver {
 namespace earthsensor {
 
 //! ソフトウェアシミュレーションレベルで動作する地球センサドライバ．
+	//Earth sensor driver operating at software simulation level
 /*! 
-	@tparam Env コンポーネントの環境クラス．
+	@tparam Env コンポーネントの環境クラス．Environment class of the component
 */
 template <class Env>
 class EarthSensor : public EarthSensorBase<Env>{
 public:  
-	// 3-Sigmaで1度精度
+	// 3-Sigmaで1度精度  1 degree accuracy with 3-Sigma
 	EarthSensor(const datatype::DCM &angle) : EarthSensorBase(angle, 1, 3){}
 	~EarthSensor(){}
 private:

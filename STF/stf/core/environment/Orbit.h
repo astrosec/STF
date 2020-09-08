@@ -1,6 +1,7 @@
 /**
  * @file   Orbit.h
  * @brief  軌道計算を行う，sgp4のラッパークラス．
+ * //A wrapper class for sgp4 that performs orbital calculations.
  *
  * @author Taiga Nomi
  * @date   2011.02.16

@@ -1,6 +1,7 @@
 /**
  * @file   Includes.h
  * @brief  コマンド関係の一括インクルード．
+ * Batch inclusion of commands
  *
  * @author Taiga Nomi
  * @date   2011.02.16

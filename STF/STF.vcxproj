@@ -40,6 +40,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>C:\Program Files\boost\boost_1_44\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Program Files\boost\boost_1_44;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -47,6 +49,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_44;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4819;4391;4996;4305</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -72,6 +75,7 @@
     <None Include="..\..\..\..\..\Desktop\My Dropbox\software\AOCSFramework\argoum\SystemManager.h.bak" />
     <None Include="..\igrf10.coef" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="stf\util\loki\readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stf\satellite\nj\app\NJ.cpp" />
@@ -124,6 +128,8 @@
     <ClCompile Include="stf\satellite\prism\devicedriver\PRISMCommandReceiver.cpp" />
     <ClCompile Include="stf\satellite\prism\strategy\PRISMControlBlock.cpp" />
     <ClCompile Include="stf\util\Cout.cpp" />
+    <ClCompile Include="stf\util\loki\Singleton.cpp" />
+    <ClCompile Include="stf\util\loki\SmallObj.cpp" />
     <ClCompile Include="stf\util\math.cpp" />
     <ClCompile Include="stf\datatype\DCM.cpp" />
     <ClCompile Include="stf\datatype\EulerAngle.cpp" />
@@ -290,6 +296,25 @@
     <ClInclude Include="stf\satellite\prism\devicedriver\includes.h" />
     <ClInclude Include="stf\satellite\prism\PRISMfwd.h" />
     <ClInclude Include="stf\satellite\prism\strategy\includes.h" />
+    <ClInclude Include="stf\util\loki\AbstractFactory.h" />
+    <ClInclude Include="stf\util\loki\AssocVector.h" />
+    <ClInclude Include="stf\util\loki\EmptyType.h" />
+    <ClInclude Include="stf\util\loki\Factory.h" />
+    <ClInclude Include="stf\util\loki\Functor.h" />
+    <ClInclude Include="stf\util\loki\HierarchyGenerators.h" />
+    <ClInclude Include="stf\util\loki\MultiMethods.h" />
+    <ClInclude Include="stf\util\loki\NullType.h" />
+    <ClInclude Include="stf\util\loki\Singleton.h" />
+    <ClInclude Include="stf\util\loki\SmallObj.h" />
+    <ClInclude Include="stf\util\loki\SmartPtr.h" />
+    <ClInclude Include="stf\util\loki\static_check.h" />
+    <ClInclude Include="stf\util\loki\Threads.h" />
+    <ClInclude Include="stf\util\loki\Tuple.h" />
+    <ClInclude Include="stf\util\loki\TypeInfo.h" />
+    <ClInclude Include="stf\util\loki\Typelist.h" />
+    <ClInclude Include="stf\util\loki\TypeManip.h" />
+    <ClInclude Include="stf\util\loki\TypeTraits.h" />
+    <ClInclude Include="stf\util\loki\Visitor.h" />
     <ClInclude Include="stf\util\Macros.h" />
     <ClInclude Include="stf\RootObject.h" />
     <ClInclude Include="stf\satellite\nj\factory\NJFactory.h" />

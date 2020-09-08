@@ -25,6 +25,9 @@ namespace telemetry {
 // PRISMのテレメトリ（AOCS/CDH/詳細/粗履歴）を担当するStrategy.
 // 基本的にはSelectingOutputの実装を引き継いでいるが，外部イテレータへ実装を公開する点，
 // 時刻によって開始と終了を制御する点が異なる．
+	// Strategy in charge of PRISM telemetry (AOCS/CDH/details/rough history).
+// Basically inheriting the implementation of SelectingOutput, but exposing the implementation to the external iterator,
+// The point that the start and the end are controlled depending on the time
 template<class Env, int SCALE>
 class PRISMTelemetryStrategy : public SelectingOutput<short, SCALE> {
 public:
@@ -56,6 +59,7 @@ public:
 	}
 private:
 	// どちらか一方が超え，かつテレメ有効フラグが立っていたら取得開始．データがいっぱいになり，かつ上書き禁止モードのとき取得停止．
+	//If either one is exceeded and the Teleme valid flag is set, acquisition starts. Stops acquisition when the data is full and in overwrite protection mode.
 	datatype::DateTime start_rtc_;
 	datatype::Time start_obc_;
 	const devicedriver::clock::PRISMDummyClock<Env>* clock_;

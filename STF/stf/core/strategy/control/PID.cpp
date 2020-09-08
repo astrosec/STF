@@ -86,7 +86,7 @@ void PID::do_compute(const datatype::Time& t)
 {
 	if(t > this->last_update_){//既に別のブロック経由で更新済みなら再計算しない
 		util::Trace trace(util::Trace::kControlBlock, name_);
-		//Quaternion観測値
+		//Quaternion観測値 Observation
 		datatype::Quaternion q = this->source<0, datatype::Quaternion>().get_value(t);
 		datatype::EulerAngle e = datatype::TypeConverter::toEulerAngle(q.conjugate() * this->q_target_);
 		datatype::EulerAngle e_diff = this->source<1, datatype::StaticVector<3>>().get_value(t);
@@ -103,6 +103,7 @@ void PID::do_compute(const datatype::Time& t)
 datatype::StaticVector<3> PID::compute_torque_(const datatype::EulerAngle& x, const datatype::EulerAngle& x_delta, const datatype::EulerAngle& x_total)
 {
 	//オイラー角がZ-Y-X表現なのに対してトルクはX-Y-Zの順．順番に注意
+	//Euler angles are expressed in Z-Y-X, but torque is in the order of X-Y-Z. Note the order
 	datatype::StaticVector<3> output;	
 	output[2] = this->kp_ * x[0] + this->kd_ * x_delta[0] + this->ki_ * x_total[0];
 	output[1] = this->kp_ * x[1] + this->kd_ * x_delta[1] + this->ki_ * x_total[1];
@@ -113,12 +114,14 @@ datatype::StaticVector<3> PID::compute_torque_(const datatype::EulerAngle& x, co
 void QuaternionPID::do_compute(const datatype::Time& t)
 {
 	if(t > this->last_update_){//既に別のブロック経由で更新済みなら再計算しない
+		//Do not recalculate if already updated via another block
 		util::Trace trace(util::Trace::kControlBlock, name_);
 
-		//Quaternion観測値
+		//Quaternion観測値 Quaternion observation
 		datatype::Quaternion q = this->source<0, datatype::Quaternion>().get_value(t);
 		datatype::EulerAngle e = datatype::TypeConverter::toEulerAngle(q.conjugate() * this->q_target_);
 		//角速度センサではなくQの差分で微分値を計算
+		//Calculate differential value by Q difference instead of angular velocity sensor
 		datatype::EulerAngle e_diff = (e - this->e_before_) / this->dt_;
 		this->e_total_ += e * this->dt_;
 
@@ -132,15 +135,17 @@ void QuaternionPID::do_compute(const datatype::Time& t)
 
 void EarthPointingPID::do_compute(const datatype::Time& t)
 {
-	if(t > this->last_update_){//既に別のブロック経由で更新済みなら再計算しない
+	if(t > this->last_update_){//既に別のブロック経由で更新済みなら再計算しない 
+		//Do not recalculate if already updated via another block
 		util::Trace trace(util::Trace::kControlBlock, name_);
 
-		//Quaternion観測値
+		//Quaternion観測値 Quaternion observation
 		datatype::Quaternion q = this->source<0, datatype::Quaternion>().get_value(t);
 		this->earthvector_ = datatype::OrbitCalc::getEarthDirection3D(this->source<2, datatype::PositionInfo>().get_value(t));
 		datatype::StaticVector<3> v = this->earthvector_ - this->target_earthvector_;
 		
 		//角速度センサではなくQの差分で微分値を計算
+		//Calculate differential value by Q difference instead of angular velocity sensor
 		datatype::EulerAngle e_diff = (v - this->e_before_) / this->dt_;
 		this->e_total_ += v * this->dt_;
 
@@ -159,14 +164,15 @@ void DynamicPID::do_compute(const datatype::Time& t){
 	if(t > this->last_update_){//既に別のブロック経由で更新済みなら再計算しない
 		util::Trace trace(util::Trace::kControlBlock, name_);
 
-		//Quaternion観測値
+		//Quaternion観測値 Quaternion observation
 		datatype::Quaternion q = this->source<0, datatype::Quaternion>().get_value(t);
-		//Quaternion目標値
+		//Quaternion目標値 Quaternion observation
 		datatype::Quaternion q_target = this->source<2, datatype::Quaternion>().get_value(t);
-		//目標までのオイラー角
+		//目標までのオイラー角 Euler angle to the target
 		datatype::EulerAngle e = datatype::TypeConverter::toEulerAngle( q.conjugate() * q_target );
 		
 		//角速度センサではなくQの差分で微分値を計算
+		//Calculate differential value by Q difference instead of angular velocity sensor
 		datatype::EulerAngle e_diff = (e - this->e_before_) / this->dt_;
 		this->e_total_ += e * this->dt_;
 

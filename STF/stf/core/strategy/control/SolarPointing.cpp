@@ -1,6 +1,7 @@
 /**
  * @file   SolarPointing.cpp
  * @brief  MTQで太陽指向制御を行うための制御ブロック．
+ * Control block for sun-oriented control with MTQ.
  *
  * @author Taiga Nomi
  * @date   2011.02.16

@@ -1,6 +1,7 @@
 /**
  * @file   SimpleFunctionCommand.h
  * @brief  引数なしのファンクタやメンバ関数を起動するコマンド．
+ * A command that starts a functor or member function without arguments
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -18,6 +19,7 @@ namespace core {
 namespace command {
 
 //! 引数なしファンクタを起動するコマンド．
+	//Command to start a functor without arguments
 /*! 
 */
 class SimpleFunctorCommand : public Command {
@@ -38,9 +40,9 @@ private:
 };
 
 //! 引数なし，戻り値型Uのメンバ関数を呼び出し，返答をコマンドパケットに送出する
-/*! 
-	@tparam T メンバ関数を保持するクラス．
-	@tparam U メンバ関数の戻り値型．
+/*! //Calls the member function of the return value type U with no argument and sends the reply to the command packet
+	@tparam T メンバ関数を保持するクラス．Class holding member function
+	@tparam U メンバ関数の戻り値型．Return type of member function
 */ 
 template<class T, class U>
 class SimpleMemberFunctionCommand : public Command {
@@ -63,8 +65,10 @@ private:
 };
 
 //! 引数なし，戻り値voidのメンバ関数を呼び出す
+//Call a member function with no arguments and a return value of void
 /*! 
 	@tparam T メンバ関数を保持するクラス．
+	//Class holding member function
 */ 
 template<class T>
 class SimpleMemberFunctionCommand<T, void> : public Command {

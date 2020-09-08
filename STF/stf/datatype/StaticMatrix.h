@@ -1,6 +1,7 @@
 /**
  * @file   StaticMatrix.h
  * @brief  テンプレートを用いた固定要素数の行列計算クラス
+ * Matrix calculation class with fixed number of elements using template
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -15,6 +16,7 @@ namespace stf {
 namespace datatype {
 
 //! テンプレートを用いた固定要素数の行列計算クラス
+	//Matrix calculation class with fixed number of elements using template
 /*!  */
 template<int rows, int cols>
 class StaticMatrix {
@@ -32,7 +34,7 @@ public:
 	bool is_unit(double delta = 0.0) const;
     int pivot(StaticMatrix &m, int row) const ;
 	double trace() const ;//Trace
-	double det() const ; //行列式
+	double det() const ; //行列式 //Determinant
     StaticMatrix &operator=(const StaticMatrix &rhs);
     StaticMatrix &operator+=(const StaticMatrix &rhs);
     StaticMatrix &operator-=(const StaticMatrix &rhs);
@@ -65,6 +67,7 @@ inline StaticVector<cols> &StaticMatrix<rows, cols>::operator[](int index)
 }
 
 //行列の加算
+//Matrix addition
 template<int rows, int cols>
 const StaticMatrix<rows, cols> operator + (const StaticMatrix<rows, cols>& oper1, const StaticMatrix<rows, cols>& oper2){
 	StaticMatrix<rows, cols> mat = oper1;
@@ -73,6 +76,7 @@ const StaticMatrix<rows, cols> operator + (const StaticMatrix<rows, cols>& oper1
 }
 
 //行列の減算
+//Matrix subtraction
 template<int rows, int cols>
 inline const StaticMatrix<rows, cols> operator - (const StaticMatrix<rows, cols>& oper1, const StaticMatrix<rows, cols>& oper2){
 	StaticMatrix<rows, cols> mat = oper1;
@@ -81,6 +85,7 @@ inline const StaticMatrix<rows, cols> operator - (const StaticMatrix<rows, cols>
 }
 
 //行列の積算
+//Matrix multiplication
 template<int rows1, int cols1, int cols2>
 inline const StaticMatrix<rows1, cols2> operator * (const StaticMatrix<rows1, cols1>& oper1, const StaticMatrix<cols1, cols2>& oper2){
 	StaticMatrix<rows1, cols2> mat;
@@ -94,6 +99,7 @@ inline const StaticMatrix<rows1, cols2> operator * (const StaticMatrix<rows1, co
 }
 
 //行列を右から定数倍
+//Multiply matrix from right by constant
 template<int rows, int cols>
 inline const StaticMatrix<rows, cols> operator * (const StaticMatrix<rows, cols>& oper, double factor){
 	StaticMatrix<rows, cols> mat = oper;
@@ -102,12 +108,14 @@ inline const StaticMatrix<rows, cols> operator * (const StaticMatrix<rows, cols>
 }
 
 //行列を左から定数倍
+//Multiply matrix from left by constant
 template<int rows, int cols>
 inline const StaticMatrix<rows, cols> operator * (double factor, const StaticMatrix<rows, cols>& oper){
 	return oper * factor;
 }
 
 //行列の定数除算
+//Matrix constant division
 template<int rows, int cols>
 inline const StaticMatrix<rows, cols> operator / (const StaticMatrix<rows, cols>& oper, double factor){
 	StaticMatrix<rows, cols> mat = oper;
@@ -116,6 +124,7 @@ inline const StaticMatrix<rows, cols> operator / (const StaticMatrix<rows, cols>
 }
 
 //行列とベクトルの積
+//Matrix-vector product
 template<int rows, int cols>
 inline const StaticVector<rows> operator * (const StaticMatrix<rows, cols>& mat, const StaticVector<cols>& vec){
 	StaticVector<rows> temp;
@@ -153,7 +162,7 @@ template<int rows, int cols>
 double StaticMatrix<rows, cols>::det() const 
 {
 	stf_assert(cols == rows);
-	stf_assert(cols <= 3);//とりあえず3次まで定義
+	stf_assert(cols <= 3);//とりあえず3次まで定義 //For the time being, define up to the third order
 
 	if(cols == 2){
 		return value_[0][0] * value_[1][1] - value_[0][1] * value_[1][0];
@@ -201,7 +210,8 @@ StaticMatrix<rows, cols> StaticMatrix<rows, cols>::inverse() const
 
 	StaticMatrix<rows, cols> tempmat;
 	for(int i = 0; i < rows; i++) tempmat[i][i] = 1.0;
-	StaticMatrix<rows, cols> m = *this;//副作用を生じないように現インスタンスのコピーで計算
+	StaticMatrix<rows, cols> m = *this;//副作用を生じないように現インスタンスのコピーで計算 
+	//Calculate with a copy of the current instance to avoid side effects
 
 	for (k = 0; k < rows; k++)
 	{
@@ -272,7 +282,7 @@ int StaticMatrix<rows, cols>::pivot(StaticMatrix &m, int row) const
 template<int rows, int cols>
 StaticMatrix<rows, cols> &StaticMatrix<rows, cols>::operator=(const StaticMatrix<rows, cols> &rhs)
 {
-	if(this == &rhs) return *this;//自己参照によるメモリリークを防ぐ
+	if(this == &rhs) return *this;//自己参照によるメモリリークを防ぐ  //Prevent memory leak due to self-reference
 
 		for(int r = 0; r < rows; r++) 
 		  for(int c = 0; c < cols; c++)

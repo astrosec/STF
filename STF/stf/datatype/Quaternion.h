@@ -1,7 +1,7 @@
 /**
  * @file   Quaternion.h
  * @brief  4元数を表現するクラス．
- *
+ *			A class that represents a quaternion.
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -14,6 +14,10 @@ namespace datatype {
 
 //! 4元数を表現するクラス．q0がcosと定義されている点に注意．
 /*! */
+	/*
+	A class that represents a quaternion. Note that q0 is defined as cos.
+	*/
+
 class Quaternion : public StaticVector<4> {
 public:
     Quaternion(){
@@ -34,15 +38,19 @@ public:
 	~Quaternion(){}
 
 	//! 共役を取得する．
+	//Get the conjugate.
 	Quaternion conjugate() const { return Quaternion(-value_[0], value_[1], value_[2], value_[3]); }
 	//! ノルムを1に調整する．
+	//Adjust norm to 1
 	virtual void normalize();
 	//! n-ノルムを取得．
+	//Get n-norm.
 	virtual double norm(int n) const;
 private:
 };
 
 //! Quaternionの減算．
+//Subtraction of.
 inline const Quaternion operator - (const Quaternion& vec1, const Quaternion& vec2){
 	Quaternion temp = vec1;
 	if(vec1[0] * vec2[0] < 0){
@@ -56,6 +64,7 @@ inline const Quaternion operator - (const Quaternion& vec1, const Quaternion& ve
 }
 
 //! Quaternionの積．
+//Product of.
 inline Quaternion operator * (const Quaternion& q1, const Quaternion& q2){
 	Quaternion q;
 	q[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];

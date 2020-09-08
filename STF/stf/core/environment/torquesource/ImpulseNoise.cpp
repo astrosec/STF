@@ -1,6 +1,7 @@
 /**
  * @file   ImpulseNoise.cpp
  * @brief  インパルスノイズを発生させるトルク源．
+ * A torque source that generates impulse noise
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -23,7 +24,7 @@ ImpulseNoise::ImpulseNoise(double magnitude, environment::SimulatorBase *env)
 {
 	this->duration_.add_seconds(1);
     datatype::StaticVector<3> v;
-    v[2] = 1;//Z軸まわりの1秒トルクをデフォルトとする．
+    v[2] = 1;//Z軸まわりの1秒トルクをデフォルトとする．//The default is 1 second torque around the axis.
     this->vector_ = v;
 }
 
@@ -40,7 +41,8 @@ datatype::StaticVector<3> ImpulseNoise::get_torque_bodyframe() const
 {
     if(this->starttime_ <= this->environment_->getTrueTime())
         if(this->starttime_ + this->duration_ > this->environment_->getTrueTime())
-            return this->magnitude_ * this->vector_;//計算時間刻みがインパルスより十分細かくないと不正確
+            return this->magnitude_ * this->vector_;//計算時間刻みがインパルスより十分細かくないと不正確 
+	//Inaccurate unless the calculation time step is finer than the impulse
 
     datatype::StaticVector<3> v;
     return v;

@@ -1,6 +1,7 @@
 /**
  * @file   MagneticMomentToTorque.cpp
  * @brief  磁気モーメントをトルクに変換する制御ブロック．
+ * Control block that converts magnetic moment to torque
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -29,6 +30,7 @@ MagneticMomentToTorque::MagneticMomentToTorque(
 
 void MagneticMomentToTorque::do_compute(const datatype::Time& t) {
 	if(t <= this->last_update_) return; //既に別のブロック経由で更新済みなら再計算しない
+	//Do not recalculate if already updated via another block
 
 	util::Trace trace(util::Trace::kControlBlock, name_);
 

@@ -1,6 +1,7 @@
 /**
  * @file   StaticVector.h
  * @brief  テンプレートを用いた固定要素数のベクトル計算クラス
+ * Vector calculation class with fixed number of elements using template
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -15,6 +16,7 @@ namespace stf {
 namespace datatype {
 
 //! テンプレートを用いた固定要素数のベクトル計算クラス
+	//Vector calculation class with fixed number of elements using template
 /*!  */
 template<int dim>
 class StaticVector : public IAocsData {
@@ -56,12 +58,16 @@ void StaticVector<dim>::normalize()
 {
 //単なる物理量のセットなので一般的なnormalizeは実装できない
 //ノルムで割るような操作はサブクラスで実装すること
+
+//Since it is just a set of physical quantities, general normalize cannot be implemented
+//Operations such as dividing by norm should be implemented in subclasses.
 }
 
 template<int dim>
 double StaticVector<dim>::norm(int n) const
 {
 	stf_assert((n == 1) || (n == 2));//計算負荷の問題から今は1，2次のノルムしかとらない
+	//Due to the problem of computational load, only the norm of the 1st and 2nd order is taken now
 	double value = 0.0;
 	if(n == 1){
 		for(int i = 0; i < dim; i++)
@@ -191,6 +197,7 @@ inline const StaticVector<dim> operator - (const StaticVector<dim>& vec1, const 
 }
 
 // ベクトルの内積
+//Vector dot product
 template<int dim>
 inline const double operator * (const StaticVector<dim>& vec1, const StaticVector<dim>& vec2){
 	double value = 0.0;
@@ -200,6 +207,7 @@ inline const double operator * (const StaticVector<dim>& vec1, const StaticVecto
 }
 
 // ベクトルを右から定数倍
+//Multiply vector from right by constant
 template<int dim>
 inline const StaticVector<dim> operator * (const StaticVector<dim>& vec, double factor){
 	StaticVector<dim> temp = vec;
@@ -207,6 +215,7 @@ inline const StaticVector<dim> operator * (const StaticVector<dim>& vec, double 
 }
 
 // ベクトルを左から定数倍
+//Multiply vector from left by constant
 template<int dim>
 inline const StaticVector<dim> operator * (double factor, const StaticVector<dim>& vec){
 	return vec * factor;
@@ -225,6 +234,7 @@ inline double operator %(const StaticVector<2>& vec1, const StaticVector<2>& vec
 }
 
 // ベクトルを定数で除算
+//Divide vector by constant
 template<int dim>
 inline const StaticVector<dim> operator / (const StaticVector<dim>& vec, double factor){
 	StaticVector<dim> temp = vec;

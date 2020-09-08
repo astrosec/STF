@@ -18,7 +18,7 @@ namespace sunsensor {
 template <class Env>
 class PRISMSunSensor : public SunSensorBase<Env>{
 public:  
-	// 3-Sigmaで1度精度
+	// 3-Sigmaで1度精度 3-degree accuracy with Sigma
 	PRISMSunSensor( const datatype::DCM &angle) : SunSensorBase(angle, 1, 3){}
 	~PRISMSunSensor(){}
 	virtual void do_update(){}

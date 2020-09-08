@@ -28,6 +28,13 @@ namespace nj {
 
 
 //3つのトルクを単純加算で合成する制御ブロック．
+	// write control block specific to Nano-JASMINE
+
+// Quaternion Avevraging Block
+// Convert 2-axis Quaternion to 1 Quaternion
+
+
+//3 Control block that synthesizes three torques by simple addition.
 class QuaternionAveraging : public devicedriver::InputPorts< TYPELIST_2(datatype::Quaternion, datatype::Quaternion) >, 
 		public devicedriver::OutputPorts < TYPELIST_1(datatype::Quaternion) > ,
 		public StrategyBase
@@ -50,6 +57,7 @@ protected:
 };
 
 //StarEKF 星像から角速度を推定するEKF.
+//StarEKF EKF that estimates the angular velocity from the star image.
 class StarImageEKF : public devicedriver::InputPorts< TYPELIST_2(datatype::StaticVector<3>, datatype::StaticVector<3>) >,
 		public devicedriver::OutputPorts < TYPELIST_1(datatype::StaticVector<3>) > ,
 		public StrategyBase
@@ -62,6 +70,7 @@ private:
 
 
 //中期姿勢安定度要求に応じて目標Quaternionを伝搬する制御ブロック．
+//Control block that propagates the target Quaternion according to the mid-term posture stability requirement.
 class MidRangeSpinController : public devicedriver::InputPorts< TYPELIST_1(datatype::Quaternion) >,
 		public devicedriver::OutputPorts < TYPELIST_1(datatype::Quaternion) > ,
 		public StrategyBase
@@ -88,6 +97,8 @@ private:
 
 //FOG推定モードにおける目標Quaternionを制御するブロック．
 //衛星6面のうち1面を太陽方向を指向させる
+////Block that controls the target Quaternion in FOG estimation mode.
+// Point one of the six satellites to the sun
 class QuaternionForRMMEstimation : public devicedriver::InputPorts< TYPELIST_1(datatype::PositionInfo) >,
 		public devicedriver::OutputPorts < TYPELIST_1(datatype::Quaternion) > ,
 		public StrategyBase
@@ -100,7 +111,7 @@ private:
 	devicedriver::clock::IAbsoluteTimeClock* clock_;
 	datatype::Time before_;
 	datatype::Time timespan_;
-	int index_;//現在の太陽指向面
+	int index_;//現在の太陽指向面 Current sun-oriented plane
 };
 
 class MCConstantOutput : 

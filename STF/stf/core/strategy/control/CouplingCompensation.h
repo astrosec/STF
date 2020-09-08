@@ -21,9 +21,10 @@ namespace strategy {
 namespace control {
 
 //! 3軸独立に制御則を適用した際に生じるクロスカップリング項Iωを，フィードフォワードに打ち消すために使う制御ブロック．
+	//A control block used to cancel the feed-forward cross-coupling term Iω that occurs when the control law is applied independently of the axis.
 /*! 
-	入力:3軸角速度
-	出力:3軸トルク
+	入力:3軸角速度 Shaft angular velocity
+	出力:3軸トルク Shaft torque
 */
 template<class Env>
 class CouplingCompensation

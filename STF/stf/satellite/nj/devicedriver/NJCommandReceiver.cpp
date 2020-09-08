@@ -15,7 +15,7 @@ namespace core {
 namespace devicedriver {
 namespace cmhandler {
 
-//デバッグ用の特殊化．外部ファイルから1行ずつ読み込み，
+//デバッグ用の特殊化．外部ファイルから1行ずつ読み込み，Specialization for debugging. Read line by line from an external file,
 template<> void NJCommandReceiver<environment::Simulator<app::NJ> >::receive_command(){
 
 

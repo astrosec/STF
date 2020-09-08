@@ -1,6 +1,7 @@
 /**
  * @file   Vector.h
  * @brief  可変要素数のベクトル演算を行うクラス．STFではStaticVectorが推奨される
+ * A class that performs vector operations with a variable number of elements. Static Vector recommended for STF
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -15,6 +16,10 @@ namespace stf {
 namespace datatype {
 //! 可変要素数のベクトル演算を行う．
 /*! メモリの動的確保を行うため，STFではシステム初期化以外のタイミングでの使用が推奨されない．通常はStaticVectorを使うこと */
+	/*
+	//! Perform vector operation with variable number of elements.
+/*! In order to allocate memory dynamically, STF does not recommend to use at timing other than system initialization. Normally use StaticVector */
+
 class Vector : public IAocsData {
 public:
     Vector();
@@ -111,7 +116,7 @@ inline const Vector operator - (const Vector& vec1, const Vector& vec2){
 	return temp;
 }
 
-// ベクトルの内積
+// ベクトルの内積 //Vector dot product
 inline const double operator * (const Vector& vec1, const Vector& vec2){
 	stf_assert(vec1.dimension_ == vec2.dimension_);
 	double value = 0.0;
@@ -120,18 +125,18 @@ inline const double operator * (const Vector& vec1, const Vector& vec2){
 	return value;
 }
 
-// ベクトルを右から定数倍
+// ベクトルを右から定数倍  //Multiply vector from right by constant
 inline const Vector operator * (const Vector& vec, double factor){
 	Vector temp = vec;
 	return temp *= factor;
 }
 
-// ベクトルを左から定数倍
+// ベクトルを左から定数倍 //Multiply vector from left by constant
 inline const Vector operator * (double factor, const Vector& vec){
 	return vec * factor;
 }
 
-// ベクトルの外積．2または3次元ベクトルの場合のみ有効
+// ベクトルの外積．2または3次元ベクトルの場合のみ有効 //Vector cross product. Valid only for 2 or 3 dimensional vectors
 inline const Vector operator %(const Vector& vec1, const Vector& vec2){
 	stf_assert(vec1.dimension_ == vec2.dimension_);
 	stf_assert(vec1.dimension_ == 2 || vec1.dimension_ == 3);
@@ -148,7 +153,7 @@ inline const Vector operator %(const Vector& vec1, const Vector& vec2){
 	}
 }
 
-// ベクトルを定数で除算
+// ベクトルを定数で除算  //Divide vector by constant
 inline const Vector operator / (const Vector& vec, double factor){
 	Vector temp = vec;
 	return temp /= factor;

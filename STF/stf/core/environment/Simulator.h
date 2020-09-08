@@ -1,6 +1,7 @@
 /**
  * @file   Simulator.h
  * @brief  ソフトウェアシミュレータ環境クラス．
+ * Software simulator environment class
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -68,22 +69,24 @@ public:
 /*! 
 	IOドライバレベルのエミュレーションは行わず，センサやアクチュエータとのデータ交換は
 	各センサ，アクチュエータ型のSimulatorに特殊化したdo_update関数によって行われる．
+	IO driver level emulation is not performed, and data exchange with sensors and actuators is not possible.
+This is done by the do_update function that is specialized for each sensor and actuator type Simulator.
 
 	@code
-	//シミュレータの生成
+	//シミュレータの生成  Simulator generation
 	stf::environment::Simulator& s = stf::environment::Simulator<App>::get_instance();
 
-	//グローバルオブジェクトの生成
+	//グローバルオブジェクトの生成  Global Object Generation
 	stf::factory::SatelliteFactory<ENV>* en = new stf::factory::PRISMFactory<ENV>();
 	stf::Global<ENV>* gl = en->create();
 
-	//シミュレーション用の軌道情報
+	//シミュレーション用の軌道情報  Orbit information for simulation
 	datatype::OrbitInfo orbit(7100000, 0.01, 0, 0.5 * util::math::PI, 0, 0);
 
-	//シミュレータ初期化
+	//シミュレータ初期化  Simulator initialization
 	s.init(gl, 100, 100, orbit, new std::ofstream("output.csv"));
 
-	//2000ステップ実行
+	//2000ステップ実行  2000 steps execution
 	for(int i = 0; i < 2000; i++)
 		s.runOneCycle();
 	@endcode
@@ -95,6 +98,7 @@ public:
 
 	//Environmental Class
 	//! シミュレータ環境用のGPIOドライバ．使用しないので空クラスとして定義
+	//GPIO driver for simulator environment. Defined as an empty class because it is not used
 	template<int i>class GPIO : public GPIOBase<i> {};
 	typedef SPIBase SPI;
 	typedef UARTBase UART;
@@ -274,6 +278,7 @@ void Simulator<App>::runOneCycle()
 	}
 
     this->true_torque_.reset();//トルクを一旦リセットし，外部ソースから計算しなおす
+	//Reset the torque once and recalculate from an external source
     std::vector<TorqueSource*>::iterator it_t = this->torque_sources_.begin(), end_t = this->torque_sources_.end();
     while( it_t != end_t ){
 		for(int i = 0; i < 3; i++){
@@ -289,13 +294,13 @@ void Simulator<App>::runOneCycle()
         ++it_n;
     }
 
-    //次ステップの計算
-    double acc[3];//角加速度
+    //次ステップの計算  Next step calculation
+    double acc[3];//角加速度  Angular acceleration
 	acc[0] = this->true_torque_[0] + this->noise_torque_[0];
     acc[1] = this->true_torque_[1] + this->noise_torque_[1];
-    acc[2] = this->true_torque_[2] + this->noise_torque_[2];//TBD:衛星の質量特性で割る必要
+    acc[2] = this->true_torque_[2] + this->noise_torque_[2];//TBD:衛星の質量特性で割る必要 TBD: Need to divide by satellite mass characteristics
 
-    double omega[3];//角速度ωn+1＝ωn＋at
+    double omega[3];//角速度ωn+1＝ωn＋at  Angular velocity ωn+1=ωn＋at
 	omega[0] = this->true_angular_velocity_[0] + acc[0] * this->timestep_.total_seconds();
     omega[1] = this->true_angular_velocity_[1] + acc[1] * this->timestep_.total_seconds();
     omega[2] = this->true_angular_velocity_[2] + acc[2] * this->timestep_.total_seconds();
@@ -307,11 +312,13 @@ void Simulator<App>::runOneCycle()
     Omega_[1][3] = -omega[1];
     Omega_[2][3] =  omega[0];
     for(int i = 0; i < 4; i++)
-      for(int j = 0; j < 4; j++)
-        if(i > j) Omega_[i][j] = -Omega_[j][i];
-
-    this->true_quaternion_ += util::math::RungeKutta::slope(true_quaternion_, 0.5 * Omega_, timestep_.total_seconds());
-    for(int i = 0; i < 3; i++) this->true_angular_velocity_[i] = omega[i];
+		for(int j = 0; j < 4; j++)
+			if(i > j) 
+				Omega_[i][j] = -Omega_[j][i];
+	this->true_quaternion_ += util::math::RungeKutta::slope(true_quaternion_, 0.5 * Omega_, timestep_.total_seconds());
+    
+	for(int i = 0; i < 3; i++) 
+		this->true_angular_velocity_[i] = omega[i];
 	this->step_();
 }
 

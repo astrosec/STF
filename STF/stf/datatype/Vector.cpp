@@ -1,6 +1,7 @@
 /**
  * @file   Vector.cpp
  * @brief  可変要素数のベクトル演算を行うクラス．STFではStaticVectorが推奨される
+ * A class that performs vector operations with a variable number of elements. Static Vector recommended for STF
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -25,11 +26,13 @@ void Vector::normalize()
 {
 //単なる物理量のセットなので一般的なnormalizeは実装できない
 //ノルムで割るような操作はサブクラスで実装すること
+	//Since it is just a set of physical quantities, general normalize cannot be implemented
+//Operations such as dividing by norm should be implemented in subclasses.
 }
 
 double Vector::norm(int n) const
 {
-	stf_assert((n == 1) || (n == 2));//計算負荷の問題から今は1，2次のノルムしかとらない
+	stf_assert((n == 1) || (n == 2));//計算負荷の問題から今は1，2次のノルムしかとらない  //Due to the problem of computational load, only the norm of the 1st and 2nd order is taken now
 	double value = 0.0;
 	if(n == 1){
 		for(int i = 0; i < this->dimension_; i++)
@@ -71,7 +74,7 @@ void Vector::initVector(int dim, double value)
     stf_assert(dim > 0);
 	this->value_ = new double[dim];
 	this->dimension_ = dim;
-	stf_assert(this->value_ != 0);//メモリが確保できないときにvalue_==0となって終了
+	stf_assert(this->value_ != 0);//メモリが確保できないときにvalue_==0となって終了  //When memory cannot be allocated, value_==0 and end
 	for(int i = 0; i < dim; i++)
 		this->value_[i] = value;
 }

@@ -1,6 +1,7 @@
 /**
  * @file   IAocsData.h
  * @brief  AOCS使用系列のデータ共通の抽象インターフェース．
+ * Abstract interface common to the data of usage series
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -13,7 +14,7 @@
 namespace stf { 
 namespace datatype {
 
-//! AOCS使用系列のデータ共通の抽象インターフェース．
+//! AOCS使用系列のデータ共通の抽象インターフェース．//Abstract interface common to the data of usage series
 /*! */
 class IAocsData : public interface::ITelemetable{
 public:

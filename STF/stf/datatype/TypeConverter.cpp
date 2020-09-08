@@ -1,6 +1,7 @@
 /**
  * @file   TypeConverter.cpp
  * @brief  単位や姿勢表現の相互変換を行うユーティリティ．
+ * Utility for mutual conversion of units and posture expressions
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -26,7 +27,7 @@ Quaternion TypeConverter::toQuaternion(const DCM &dcm)
 		q[1] = (dcm_n[1][2] - dcm_n[2][1]) / (4 * q[0]);
 		q[2] = (dcm_n[2][0] - dcm_n[0][2]) / (4 * q[0]);
 		q[3] = (dcm_n[0][1] - dcm_n[1][0]) / (4 * q[0]);
-	}else{//q0 = 0のとき
+	}else{//q0 = 0のとき //When
 		q[3] = sqrt(-(dcm_n[0][0] + dcm_n[1][1]) / 2);
 		q[2] = sqrt(-(dcm_n[0][0] + dcm_n[2][2]) / 2);
 		q[1] = sqrt(-(dcm_n[1][1] + dcm_n[2][2]) / 2);
@@ -40,7 +41,7 @@ DCM TypeConverter::toDCM(const Quaternion &q)
 {
 	Quaternion q_n = q;
 	q_n.normalize();
-	DCM d;//Z-Y-Xの順に回転する回転行列とする
+	DCM d;//Z-Y-Xの順に回転する回転行列とする  //Is a rotation matrix that rotates in the order of
 	d[0][0] = q_n[0] * q_n[0] + q_n[1] * q_n[1] - q_n[2] * q_n[2] - q_n[3] * q_n[3];
 	d[0][1] = 2 * (q_n[1] * q_n[2] + q_n[0] * q_n[3]);
 	d[0][2] = 2 * (q_n[1] * q_n[3] - q_n[0] * q_n[2]);
@@ -62,7 +63,7 @@ DCM TypeConverter::toDCM(const EulerAngle &euler_angle)
 	double sin1 = sin(euler_angle[1]);
 	double sin2 = sin(euler_angle[0]);
 
-	DCM d;//Z-Y-Xの順に回転する回転行列とする
+	DCM d;//Z-Y-Xの順に回転する回転行列とする //Is a rotation matrix that rotates in the order of
 	d[0][0] = cos1 * cos2;                      d[0][1] = cos1 * sin2;                      d[0][2] = -sin1;
 	d[1][0] = sin0 * sin1 * cos2 - cos0 * sin2; d[1][1] = sin0 * sin1 * sin2 + cos0 * cos2; d[1][2] = sin0 * cos1;
 	d[2][0] = cos0 * sin1 * cos2 + sin0 * sin2; d[2][1] = cos0 * sin1 * sin2 - sin0 * cos2; d[2][2] = cos0 * cos1;
@@ -126,7 +127,7 @@ OrbitInfo TypeConverter::toOrbitInfo(const PositionInfo &pos)
 	double r = pos.position.norm(2);
 	o.a =  util::math::MU / ( ( 2 * util::math::MU / r )- v * v );
 
-	StaticVector<3> h  = pos.position % pos.velocity;//外積
+	StaticVector<3> h  = pos.position % pos.velocity;//外積 //Cross product
 
 	o.i = acos( h[2] / h.norm(2) );
 	double sin = h[0] / sqrt(h[0] * h[0] + h[1] * h[1]);
@@ -140,13 +141,13 @@ OrbitInfo TypeConverter::toOrbitInfo(const PositionInfo &pos)
 	double sinE = (pos.position * pos.velocity) / ( o.e * sqrt( util::math::MU * o.a ) );
 	o.M = atan2(sinE, cosE) - o.e * sinE;
 	}
-	else{//離心率0のとき，近点離角は定義できない
+	else{//離心率0のとき，近点離角は定義できない //When the eccentricity is 0, the near point separation angle cannot be defined
 		o.M = 0;
 	}
 	double sinO = pos.position[2] / ( r * util::math::Sin(o.i) );
 	double cosO = (pos.position[0] * util::math::Cos(o.Omega) + pos.position[1] * util::math::Sin(o.Omega) ) / r;
 	o.omega = atan2(sinO, cosO);
-	o.n = 0;//位置情報だけでは決まらないが，0を入れている
+	o.n = 0;//位置情報だけでは決まらないが，0を入れている  //It is not decided only by location information, but 0 is entered
 	return o;
 }
 

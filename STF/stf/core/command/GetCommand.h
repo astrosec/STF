@@ -1,6 +1,7 @@
 /**
  * @file   GetCommand.h
  * @brief  GetterやイテレータによってSTF内部状態を応答するコマンド群．
+ * Command group that responds to STF internal status by Getter and iterator
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -18,9 +19,11 @@ namespace core {
 namespace command {
 
 //! 引数無しのメンバ関数を起動し，戻り値をパケット送出するコマンド．
+//A command that starts a member function with no arguments and sends the return value as a packet
 /*! 
-	@tparam T メンバ関数を保持するクラス．
+	@tparam T メンバ関数を保持するクラス．Class that holds the function
 	@tparam U メンバ関数の戻り値型．ICommandReceiver::send_packetに引き渡せる必要がある
+	//Return type of member function. Must be passed to ICommandReceiver::send_packet
 */
 template<class T, class U>
 class GetCommand : public Command {
@@ -44,11 +47,12 @@ private:
 };
 
 //! イテレータを取得するメンバ関数を起動し，得られたイテレータを使って内部状態をパケットに送出するコマンド．
+//A command that activates a member function that acquires an iterator and sends the internal state to a packet using the obtained iterator.
 /*! 
-	@tparam T        メンバ関数を保持するクラス．
-	@tparam Iterator Tのイテレータクラス．
-	@tparam Targ     メンバ関数の戻り値型．
-	@tparam SCALE    イテレータの値に掛ける倍数．
+	@tparam T        メンバ関数を保持するクラス．Class holding member function
+	@tparam Iterator Tのイテレータクラス．An iterator class of T
+	@tparam Targ     メンバ関数の戻り値型．Return type of member function
+	@tparam SCALE    イテレータの値に掛ける倍数．A multiple to multiply the iterator value
 */
 template<class T, class Iterator, class Targ, int SCALE = 1>
 class GetIteratorCommand : public Command {
@@ -76,8 +80,9 @@ private:
 };
 
 //! コンストラクタで引き渡したイテレータを使い，オブジェクトの内部状態をパケットに送出するコマンド．
+//A command that sends the internal state of the object to a packet using the iterator passed in the constructor
 /*! 
-	@tparam SCALE    イテレータの値に掛ける倍数．
+	@tparam SCALE    イテレータの値に掛ける倍数．A multiple to multiply the iterator value
 */
 template<int SCALE>
 class IteratorStreamCommand : public Command {

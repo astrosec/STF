@@ -1,6 +1,6 @@
 /**
  * @file   DCM.h
- * @brief  Z-Y-Xの順で回転させる回転行列（DCM）．
+ * @brief  Z-Y-Xの順で回転させる回転行列（DCM）．Rotation matrix (DCM) that rotates in the order of Z-Y-X
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -13,7 +13,7 @@
 namespace stf { 
 namespace datatype {
 
-//! Z-Y-Xの順で回転させる回転行列（DCM）．
+//! Z-Y-Xの順で回転させる回転行列（DCM）．Rotation matrix (DCM) that rotates in the order of Z-Y-X
 /*! */
 class DCM : public StaticMatrix<3, 3> {
 public:
@@ -42,9 +42,9 @@ public:
 	}
 
 	~DCM(){}
-	//! 値を-pi～piに調整する
+	//! 値を-pi～piに調整する  //Adjust the value from -pi to pi
 	virtual void normalize();
-	//! 単位行列に戻す
+	//! 単位行列に戻す //Return to identity matrix
 	virtual void reset(){ this->unitize(); }
 };
 

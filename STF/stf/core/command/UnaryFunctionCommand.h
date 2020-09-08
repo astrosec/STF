@@ -1,6 +1,7 @@
 /**
  * @file   UnaryFunctionCommand.h
  * @brief  １引数のファンクタやメンバ関数を起動するコマンド．
+ * A command that starts a functor or member function with one argument
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -16,17 +17,18 @@ namespace stf {
 namespace core {
 namespace command {
 
-//! 1引数のファンクタを起動するコマンド．
+//! 1引数のファンクタを起動するコマンド．A command to start a one-argument functor
 /*! 引数がintの場合，init関数で引数の再設定が可能．
+//If the argument is int, the init function can reset the argument.
 	@code
 	UnaryFunctorCommand<int> command_prototype(t, functor, 0);
 
 	UnaryFunctorCommand<int>* newcommand = command_prototype.clone();
 	int[] param = { 1 };
-	//引数を1に変更
+	//引数を1に変更 Change argument to 1
 	newcommand->init(param, 1);
 	@endcode
-	@tparam T ファンクタ起動時の引数型．
+	@tparam T ファンクタ起動時の引数型．Argument type when starting a functor.
 */
 template<class T>
 class UnaryFunctorCommand : public Command {
@@ -50,11 +52,11 @@ private:
 template<>
 void UnaryFunctorCommand<int>::init(int* params, int paramsize);
 
-//! 1引数のメンバ関数を起動するコマンド．
-/*! 戻り値型Uのメンバ関数を呼び出し，返答をコマンドパケットに送出する. 
-	@tparam T   メンバ関数を保持するクラス．
-	@tparam U   メンバ関数の戻り値型．
-	@tparam ARG メンバ関数の引数型．
+//! 1引数のメンバ関数を起動するコマンド．A command to start a one-argument member function.
+/*! 戻り値型Uのメンバ関数を呼び出し，返答をコマンドパケットに送出する. Call a member function of return type U and send the reply to the command packet
+	@tparam T   メンバ関数を保持するクラス．Class holding member function
+	@tparam U   メンバ関数の戻り値型．Return type of member function.
+	@tparam ARG メンバ関数の引数型．Argument type of member function
 */
 template<class T, class U, class ARG>
 class UnAryMemberFunctionCommand : public Command {
@@ -78,10 +80,10 @@ private:
 	ARG arg_;
 };
 
-//! 1引数のメンバ関数を起動するコマンド．(void特殊化版)
-/*! 戻り値型voidのメンバ関数を呼び出す. 
-	@tparam T   メンバ関数を保持するクラス．
-	@tparam ARG メンバ関数の引数型．
+//! 1引数のメンバ関数を起動するコマンド．(void特殊化版) A command to start a one-argument member function. (void special edition)
+/*! 戻り値型voidのメンバ関数を呼び出す. Call a member function of return type void.
+	@tparam T   メンバ関数を保持するクラス．A class that holds member functions.
+	@tparam ARG メンバ関数の引数型．Argument type of member function.
 */
 template<class T, class ARG>
 class UnAryMemberFunctionCommand<T, void, ARG> : public Command {

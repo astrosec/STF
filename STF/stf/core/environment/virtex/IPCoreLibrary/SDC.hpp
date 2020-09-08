@@ -3,11 +3,15 @@
   	\author IDOBATA Hiroaki
   	\date   Sun July 11 00:59:?? 2010
   
-  	\brief  SDcard IPCore ドライバ
+  	\brief  SDcard IPCore ドライバ Driver
   	
   	
   	XILINX社から提供されるSPI通信IPCoreにCRC計算の機能を付け加えた自作コアを
   	Microblazeから操作する際に必要となるプログラムをまとめる。
+
+
+	A self-made core with a CRC calculation function added to the SPI communication IP Core provided by XILINX
+   The programs required for operating from Microblaze are summarized below. ..
 
  	 このドライバではSPIでの通信方式として全二重(Full Duplex)と半二重(Half Duplex)
   	を選択可能である。全二重とはMaster側のデータの送信と同時にSlave側からデータが
@@ -15,8 +19,15 @@
   	Slave側は意味のあるデータを送信せず、Master側からのデータ送信後、Master側が
   	クロックを送信するのに合わせてSlave側がデータを送信してくるモードである。
   	このモード指定はこのクラスのコンストラクタで行う。
+	In this driver, SPI communication method is Full Duplex and Half Duplex.
+   Can be selected. What is full-duplex?
+   It is a communication mode that is sent to the Master side, and half-duplex is when the Master side sends data.
+   The Slave side does not send meaningful data, and after the data is transmitted from the Master side, the Master side
+   In this mode, the Slave side sends data as it sends the clock.
+   This mode is specified in the constructor of this class.
   	
   	MUTEX等を用いた排他制御に対応するためテンプレートクラスとして実装している。
+	It is implemented as a template class to support exclusive control using MUTEX etc.
 */
 #ifndef SDC_HPP_
 #define SDC_HPP_
@@ -35,15 +46,15 @@ template<typename AC>
 class SDC
 {
 public:		
-	//! コンストラクタ
+	//! コンストラクタ constructor
     /*! 
-     * 	SPI IP Coreを指定したモードで初期化する。
+     * 	SPI IP Coreを指定したモードで初期化する。 Initializes the SPI IP Core in the specified mode.
 		\param base_addr IP Core base address
-		\param mode SPIの動作モード(MASTER or SLAVE)
-		\param d_mode SPIのデータ転送モード(FULL DUPLEX or HALF DUPLEX)
-		\param polar SPIのクロック極性(IDLE HIGH or IDLE LOW)
-		\param phase SPIのクロック位相(PHASE FIRST or PHASE SECOND)
-		\param order SPIのビットオーダー(MSB First or LSB First)
+		\param mode SPIの動作モード(MASTER or SLAVE) SPI operation mode (MASTER or SLAVE)
+		\param d_mode SPIのデータ転送モード(FULL DUPLEX or HALF DUPLEX) SPI data transfer mode (FULL DUPLEX or HALF DUPLEX)
+		\param polar SPIのクロック極性(IDLE HIGH or IDLE LOW)SPI clock polarity (IDLE HIGH or IDLE LOW)
+		\param phase SPIのクロック位相(PHASE FIRST or PHASE SECOND)SPI clock phase (PHASE FIRST or PHASE SECOND)
+		\param order SPIのビットオーダー(MSB First or LSB First)SPI bit order (MSB First or LSB First)
     */
     SDC(unsigned int base_addr,
 		SPIParams::OPERATION_MODE mode, SPIParams::DUPLEX_MODE d_mode,
@@ -57,24 +68,31 @@ public:
     */
     ~SDC();
       
-    //! 1Byte送信メソッド
-    /*!
+    //! 1Byte送信メソッド 1Byte transmission method
+    /*! 
       	引数として指定されたデータを送信する。
       	返り値は正常に送信が行えた場合には送信したデータである。
        	送信バッファが満杯でさらにデータを追加できなかった場合にはエラーとなりEOFが返る。
-	
-		\return 正常送信が行えた場合送信したデータ。エラーの場合EOF
+	Send the data specified as an argument.
+       The return value is the transmitted data when the transmission was successful.
+        If the send buffer is full and more data cannot be added, an error will occur and EOF will be returned.
+		\return 正常送信が行えた場合送信したデータ。エラーの場合EOF  The data that was sent if the transmission was successful. EOF on error
     */
     int putchar(int c);
       
     void puts(const unsigned char s[], const unsigned int len);
-    //! 1Byte受信メソッド
+    //! 1Byte受信メソッド 1Byte receiving method
     /*! 
 		1Byteのデータを受信する。
 		返り値は受信データがある場合には受信したデータ、
 		受信バッファが空であり、受信データが無い場合にはEOFを返す。
 				  
 		\return 受信データ。エラーの場合はEOF。
+		Receives 1 Byte of data.
+The return value is the received data if there is received data,
+If the receive buffer is empty and there is no received data, EOF is returned.
+It's a sequel.
+\return Received data. EOF on error.
     */
     int getchar();
 
@@ -91,18 +109,20 @@ public:
     }
       
     //! Mode-Faultが検知された場合真を返す。このメソッドを呼び出すことで、エラーはクリアされる。
+	//Returns true if Mode-Fault is detected. The error is cleared by calling this method.
+
     bool is_mode_fault_error()
     {
       	return SPISR_ & SPISR_MODF_ ? true : false;
     }
       
-    //! Tx FIFOが満杯の場合trueを返す。
+    //! Tx FIFOが満杯の場合trueを返す。 Returns true if the Tx FIFO is full.
     bool is_tx_fifo_full()
     {
       	return SPISR_ & SPISR_Tx_FULL_ ? true : false;
     }
       
-    //! Tx FIFOが空の場合trueを返す。
+    //! Tx FIFOが空の場合trueを返す。 Returns true if the Tx FIFO is empty.
     bool is_tx_fifo_empty()
     {
       	return SPISR_ & SPISR_Tx_EMPTY_ ? true : false;
@@ -121,6 +141,7 @@ public:
     }
 
     //! SPIコアのソフトウェアリセットを行うメソッド
+	//Method for software reset of SPI core
     void reset()
     {
      	SRR_ = SRR_VALUE_;
@@ -138,7 +159,7 @@ public:
       	SPICR_ |= SPICR_Rx_FIFO_RESET_;
     }
     
-    //! CRC7を計算する
+    //! CRC7を計算する Calculate CRC7
     unsigned char calc_crc7(unsigned char *data, unsigned int len)
     {
     	for(unsigned int i = 0; i < len; i++){
@@ -149,7 +170,7 @@ public:
 		CRCIR_ = 0x00000000;
 		return CRCOR_ & 0x7f;
 	}
-    //! CRC16を計算する
+    //! CRC16を計算する Calculate CRC16
     unsigned short calc_crc16(unsigned char *data, unsigned int len)
     {	
     	unsigned int data_mask;
@@ -172,11 +193,15 @@ private:
 		このレジスタに0x0000000aを書き込むことでSPIコアのソフトウェアリセットを行うことができる。
 		これ以外の値を書き込んだ場合の動作は未定義であり、行ってはならない。
 		このレジスタを読み出した場合の値は不定である。
+		A writable register.
+The software reset of the SPI core can be performed by writing 0x0000000a to this register.
+If any other value is written, the operation is undefined and should not be performed.
+The value when this register is read is undefined.
     */
     volatile unsigned int &SRR_;
 
     //! SPI Control Register
-    /*! 
+    /*! Read/write register that sets the SPI operation. Refer to the specifications for register contents.
 		SPIの動作設定を行う読み書き可能レジスタ。レジスタの内容は仕様書参照。
     */
     volatile unsigned int &SPICR_;
@@ -186,6 +211,9 @@ private:
 		読み出しのみ可能なレジスタであり、SPIコアのステータスを保持している。
 		このレジスタへの書き込みを行っても変化は生じない。
 		レジスタの内容については仕様書参照。
+		This is a read-only register and holds the status of the SPI core.
+Writing to this register does not change.
+Refer to the specifications for register contents.
     */
     volatile unsigned int &SPISR_;
 
@@ -201,6 +229,16 @@ private:
 		SPIDTRにデータが存在する時点でさらに書き込みを行うと情報は上書きされる。
 							
 		送信用FIFOが設定されている場合にはこのレジスタへの書き込みはこのFIFOへの書き込みとなる。
+		This is a writable register and writes the transmit data in SPI.
+If the SPI is in Master mode and the SPE bit is 1, the data will be moved to the shift register.
+In addition, in the Slave mode, if SPISEL is active, data movement is performed.
+It's a sequel.
+If data already exists in the shift register, the SPIDTR data will be stored in the shift register.
+When is empty, it is loaded and sent continuously.
+It's a sequel.
+If data is further written when data exists in SPIDTR, the information will be overwritten.
+It's a sequel.
+When the transmission FIFO is set, writing to this register is writing to this FIFO.
     */
     volatile unsigned int &SPIDTR_;
 
@@ -213,6 +251,14 @@ private:
 				
 		このレジスタが空の状態で読み出しを行うとエラーとなる。また書き込みを行った
 		場合の挙動は定義されない。
+		This is a read-only register and stores received data.
+It is a double buffered register (there may be a reception FIFO).
+Received data is written to this register each time reception is completed, and if read
+If it is not done and the buffer becomes full, an over-run error will occur.
+It's a sequel.
+An error will occur if this register is read out when it is empty. I wrote again
+The behavior of the case is undefined.
+     
     */
     volatile unsigned int &SPIDRR_;
 
@@ -537,7 +583,7 @@ template<typename AC>
 int SDC<AC>::getchar()
 {
 	while(!is_tx_fifo_empty()); reset_rx_fifo(); //Tx FIFO吐き出し, Rx FIFOクリア 	
-  	SPIDTR_ = 0xff; // ダミーデータ送信 MOSIは変化させずCLKを出力する 
+  	SPIDTR_ = 0xff; // ダミーデータ送信 MOSIは変化させずCLKを出力する  Dummy data transmission MOSI does not change and outputs CLK
   	while(is_rx_fifo_empty()); // データ受信完了待ち
     return SPIDRR_;
 }

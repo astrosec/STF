@@ -1,6 +1,7 @@
 /**
  * @file   SequenceCommand.h
  * @brief  複数コマンドをシーケンシャルに実行するコマンド．
+ * A command that executes multiple commands sequentially
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -17,8 +18,10 @@ namespace core {
 namespace command {
 
 //! 複数個のコマンドをシーケンシャルに実行するコマンド．
+	//A command that executes multiple commands sequentially
 /*! 引数がintの場合，init関数で引数の再設定が可能．
-	@tparam Num 実行するコマンドの数．
+//If the argument is int, it can be reset by the init function
+	@tparam Num 実行するコマンドの数．Number of commands to execute
 */
 template<int Num>
 class SequenceCommand : public Command {
@@ -34,10 +37,11 @@ public:
 		}
 	}
 	virtual bool can_execute(const datatype::Time& t){
-		if(index_ == -1) return false; //コマンドが1つもない
-		if(this->time_ > t) return false; //まだ開始時刻ではない
+		if(index_ == -1) return false; //コマンドが1つもない No command
+		if(this->time_ > t) return false; //まだ開始時刻ではない  Not yet the start time
 		for(int i = 0; i < index_; i++){
 			if(!commands_[i]->can_execute(t)) return false; //すべてのコマンドが実行可能になるまで実行しない
+			//Do not run until all commands are ready
 		}
 		return true;
 	}
@@ -50,7 +54,7 @@ public:
 		stf_assert(index_ >= 0);
 		util::Trace trace(util::Trace::kCommand, name_);
 		for(int i = 0; i < index_; i++){
-			commands_[i]->execute();//順番に実行
+			commands_[i]->execute();//順番に実行 Run sequentially
 		}
 	}
 private:

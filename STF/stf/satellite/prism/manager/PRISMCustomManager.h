@@ -2,6 +2,8 @@
  * @file   PRISMCustomManager.h
  * @brief  ヒーター制御コントロールを行うカスタムマネージャ
  * @todo ヒータースイッチ部の実装
+  * @brief Custom manager for heater control
+  * Implementation of @todo heater switch
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -53,10 +55,10 @@ public:
 	void run()
 	{
 		if(!enable_) return;
-		datatype::Temperature value = (*(this->source_))[channel_];//制御対象の温度を取得
-			if(value < ref_){//ある値より小さければON
+		datatype::Temperature value = (*(this->source_))[channel_];//制御対象の温度を取得 Get the temperature of the controlled object
+			if(value < ref_){//ある値より小さければON ON if less than a certain value
 
-			}else{//小さければOFF
+			}else{//小さければOFF OFF if small
 
 			}
 	}

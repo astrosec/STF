@@ -26,7 +26,8 @@ void PRISMControlBlock::set_mode(int id, int value){
 	}
 }
 
-// 姿勢決定系モード
+// 姿勢決定系モード 
+//Attitude determination mode
 void PRISMControlBlock::set_acs_(int mode){
 	this->acs_mode_ = mode;
 	unsigned int mask = 0x00000001;
@@ -41,16 +42,19 @@ void PRISMControlBlock::set_acs_(int mode){
 }
 
 // 姿勢制御系モード
+//Attitude control system mode
 void PRISMControlBlock::set_ads_(int mode){
 	this->ads_mode_ = mode;
 	unsigned int mask = 0x00000001;
 	// センサ取得の有効・無効はadsmodeではなく別途コマンドを用意する
+	//To enable/disable sensor acquisition, prepare a separate command instead of adsmode.
 	(mode & (mask << 12)) ? this->strategylist_[TRIAD]->enable() : this->strategylist_[TRIAD]->disable();
 	(mode & (mask << 10)) ? this->strategylist_[EKF]->enable() : this->strategylist_[EKF]->disable();
 
 }
 
 // 磁気系モード
+//Magnetic system mode
 void PRISMControlBlock::set_obs_(int mode){
 	this->obs_mode_ = mode;
 	unsigned int mask = 0x00000001;

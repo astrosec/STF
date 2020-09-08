@@ -1,6 +1,7 @@
 /**
  * @file   Matrix.h
  * @brief  可変要素数の行列計算を行うクラス．STFではStaticMatrixが推奨される．
+ //A class that performs matrix calculation with a variable number of elements. StaticMatrix is recommended for STF.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -18,6 +19,8 @@ namespace datatype {
 
 //! 可変要素数の行列計算を行うクラス．STFではStaticMatrixが推奨される．
 /*! メモリの動的確保を行うため，STFではシステム初期化以外のタイミングでの使用が推奨されない．通常はStaticMatrixを使うこと */
+	//A class that performs matrix calculation with a variable number of elements. StaticMatrix is recommended for STF.
+ // In order to allocate memory dynamically, STF does not recommend to use at timing other than system initialization. Normally use StaticMatrix
 class Matrix {
  public:
     Matrix();
@@ -31,7 +34,7 @@ class Matrix {
     bool is_square();
     int pivot(Matrix &m, int row) const ;
 	double trace() const ;//Trace
-	double det() const ; //行列式
+	double det() const ; //行列式  Determinant
     Matrix &operator=(const Matrix &rhs);
     Matrix &operator+=(const Matrix &rhs);
     Matrix &operator-=(const Matrix &rhs);
@@ -69,7 +72,7 @@ inline Vector &Matrix::operator[](int index) const
 	return value_[index];
 }
 
-//行列の加算
+//行列の加算  Matrix addition
 inline const Matrix operator + (const Matrix& oper1, const Matrix& oper2){
 	stf_assert(oper1.rows_ == oper2.rows_ && oper1.cols_ == oper2.cols_);
 	Matrix mat = oper1;
@@ -77,7 +80,7 @@ inline const Matrix operator + (const Matrix& oper1, const Matrix& oper2){
 	return mat;
 }
 
-//行列の減算
+//行列の減算  Matrix subtraction
 inline const Matrix operator - (const Matrix& oper1, const Matrix& oper2){
 	stf_assert(oper1.rows_ == oper2.rows_ && oper1.cols_ == oper2.cols_);
 	Matrix mat = oper1;
@@ -85,7 +88,7 @@ inline const Matrix operator - (const Matrix& oper1, const Matrix& oper2){
 	return mat;		
 }
 
-//行列の積算
+//行列の積算  Matrix multiplication
 inline const Matrix operator * (const Matrix& oper1, const Matrix& oper2){
 	stf_assert(oper1.cols_ == oper2.rows_);
 	Matrix mat(oper1.rows_, oper2.cols_);
@@ -97,26 +100,26 @@ inline const Matrix operator * (const Matrix& oper1, const Matrix& oper2){
 	return mat;
 }
 
-//行列を右から定数倍
+//行列を右から定数倍  Multiply matrix from right by constant
 inline const Matrix operator * (const Matrix& oper, double factor){
 	Matrix mat = oper;
 	mat *= factor;
 	return mat;
 }
 
-//行列を左から定数倍
+//行列を左から定数倍  Multiply matrix from left by constant
 inline const Matrix operator * (double factor, const Matrix& oper){
 	return oper * factor;
 }
 
-//行列とベクトルの積
+//行列とベクトルの積  Matrix-vector product
 inline const Matrix operator / (const Matrix& oper, double factor){
 	Matrix mat = oper;
 	mat /= factor;
 	return mat;
 }
 
-//行列とベクトルの積
+//行列とベクトルの積  Matrix-vector product
 inline const Vector operator * (const Matrix& mat, const Vector& vec){
 	stf_assert(mat.cols_ == vec.dimension_);
 	Vector temp(mat.rows_);

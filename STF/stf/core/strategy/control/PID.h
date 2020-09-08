@@ -78,11 +78,14 @@ public:
 private:
 };
 
-//! 地球指向のポインティング制御を行う3軸PID制御ブロック．
+//! 地球指向のポインティング制御を行う3軸PID制御ブロック．3-axis PID control block for earth-oriented pointing control.
 /*! 
 	衛星のどの面を地球に指向するかは，コンストラクタのパラメータで与えられる．
 	入力:姿勢情報，角速度，軌道情報
 	出力:3軸トルク
+	Which side of the satellite points to the earth is given by the parameter of the constructor.
+Input: Attitude information, angular velocity, orbit information
+Output: 3-axis torque
 */
 class EarthPointingPID : public devicedriver::InputPorts< TYPELIST_3(datatype::Quaternion, datatype::StaticVector<3>, datatype::PositionInfo) >, 
 		public devicedriver::OutputPorts < TYPELIST_1(datatype::StaticVector<3>) > ,
@@ -108,21 +111,24 @@ protected:
     double ki_;
     double kd_;
 	double dt_;
-	//期待座標系における目標の地球方向ベクトル。
+	//期待座標系における目標の地球方向ベクトル。The target's earth direction vector in the expected coordinate system.
 	datatype::StaticVector<3> target_earthvector_;
-	//現在の地球方向ベクトル．
+	//現在の地球方向ベクトル．Current Earth direction vector.
 	datatype::StaticVector<3> earthvector_;
-    //1ステップ前のオイラー角誤差(微分制御に使用)
+    //1ステップ前のオイラー角誤差(微分制御に使用) Euler angle error one step before (used for differential control)
     datatype::EulerAngle e_before_;
-    //姿勢角の誤差積分値（積分制御に使用）．
+    //姿勢角の誤差積分値（積分制御に使用）．Posture angle error integrated value (used for integral control).
     datatype::EulerAngle e_total_;
 };
 
-//! 目標Quaternionを外部から逐次入力するPID制御ブロック．
+//! 目標Quaternionを外部から逐次入力するPID制御ブロック．PID control block that sequentially inputs the target Quaternion from the outside.
 /*! 
 	慣性座標系での目標が時変である場合（地上の特定地点へのポインティングなど）に使用するPID．
 	入力:姿勢情報，角速度，目標姿勢情報
 	出力:3軸トルク
+	PID used when the target in the inertial coordinate system is time-varying (pointing to a specific point on the ground, etc.).
+Input: Attitude information, angular velocity, target attitude information
+Output: 3-axis torque
 */
 class DynamicPID : public devicedriver::InputPorts< TYPELIST_3(datatype::Quaternion, datatype::StaticVector<3>, datatype::Quaternion) >, 
 		public devicedriver::OutputPorts < TYPELIST_1(datatype::StaticVector<3>) > ,
@@ -148,9 +154,9 @@ protected:
     double ki_;
     double kd_;
 	double dt_;
-    //1ステップ前のオイラー角誤差(微分制御に使用)
+    //1ステップ前のオイラー角誤差(微分制御に使用) Euler angle error one step before (used for differential control)
     datatype::EulerAngle e_before_;
-    //姿勢角の誤差積分値（積分制御に使用）．
+    //姿勢角の誤差積分値（積分制御に使用）． Posture angle error integrated value (used for integral control).
     datatype::EulerAngle e_total_;
 };
 

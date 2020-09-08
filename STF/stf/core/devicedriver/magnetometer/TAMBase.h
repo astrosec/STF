@@ -1,6 +1,7 @@
 /**
  * @file   TAMBase.h
  * @brief  3軸磁気センサの基底クラス．
+ * Base class for 3-axis magnetic sensors.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -21,7 +22,7 @@ namespace devicedriver {
 namespace magnetometer {
 
 
-//! 3軸磁気センサの基底クラス．
+//! 3軸磁気センサの基底クラス．Base class for 3-axis magnetic sensors.
 /*! 
 	@tparam Env コンポーネントの環境クラス．
 */

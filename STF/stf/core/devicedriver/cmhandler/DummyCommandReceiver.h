@@ -1,6 +1,7 @@
 /**
  * @file   DummyCommandReceiver.h
  * @brief  コマンドレシーバのデバッグ用クラス．外部テキストファイルからコマンドを読み込む
+ * Command receiver debugging class. Read commands from external text file
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -25,10 +26,11 @@ namespace devicedriver {
 namespace cmhandler {
 
 //! コマンドレシーバのデバッグ用クラス．外部テキストファイルからコマンドを読み込む
-/*! 
-	応答が必要なコマンドについては標準出力にメッセージとして吐き出す.
-	外部ファイルから読み込まれたコマンドはlast_commandに文字列として格納されるだけなので，
+/*! Command receiver debugging class. Read commands from external text file
+	応答が必要なコマンドについては標準出力にメッセージとして吐き出す.For commands that require a response, send a message to standard output.
+	外部ファイルから読み込まれたコマンドはlast_commandに文字列として格納されるだけなので，The command read from the external file is only stored as a character string in last_command, so
 	ここからコマンドオブジェクトに紐づける作業はこれを継承したアプリケーション固有のデバッグコマンドクラスで行う
+	From here, work associated with the command object is done in the application-specific debug command class that inherits this.
 */
 class DummyCommandReceiver: virtual public ICommandReceiver, public RootObject {
 public:

@@ -1,6 +1,7 @@
 /**
  * @file   Matrix.cpp
  * @brief  可変要素数の行列計算を行うクラス．STFではStaticMatrixが推奨される．
+ * A class that performs matrix calculation with a variable number of elements. StaticMatrix is recommended for STF.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -19,6 +20,7 @@ Matrix::Matrix(int rows, int cols)
 {
 	this->rows_ = rows;
 	this->cols_ = cols;//ArgoUMLの制約がなければ初期化子でやるほうが低コスト
+	//Without ArgoUML constraints, it's cheaper to do it with an initializer
 	this->value_  = new Vector[rows];
 	for(int i = 0; i < rows; i++)
 		this->value_[i].initVector(cols, 0.0);
@@ -54,7 +56,7 @@ Matrix &Matrix::unitize()
 double Matrix::det() const 
 {
 	stf_assert(cols_ == rows_);
-	stf_assert(cols_ <= 3);//とりあえず3次まで定義
+	stf_assert(cols_ <= 3);//とりあえず3次まで定義 //For the time being, define up to the third order
 
 	if(cols_ == 2){
 		return value_[0][0] * value_[1][1] - value_[0][1] * value_[1][0];
@@ -103,6 +105,7 @@ Matrix Matrix::inverse() const
 	Matrix tempmat(rows_, cols_);
 	for(int i = 0; i < rows_; i++) tempmat[i][i] = 1.0;
 	Matrix m = *this;//副作用を生じないように現インスタンスのコピーで計算
+	//Calculate with a copy of the current instance to avoid side effects
 
 	for (k = 0; k < rows_; k++)
 	{
@@ -148,7 +151,8 @@ int Matrix::pivot(Matrix &m, int row) const
 
 Matrix &Matrix::operator=(const Matrix &rhs)
 {
-	if(this == &rhs) return *this;//自己参照によるメモリリークを防ぐ
+	if(this == &rhs) return *this;//自己参照によるメモリリークを防ぐ 
+	//Prevent memory leak due to self-reference
 	if(rows_ == rhs.rows_ && cols_ == rhs.cols_){
 		for(int i = 0; i < rows_; i++)
 		  for(int j = 0; j < cols_ ; j++)

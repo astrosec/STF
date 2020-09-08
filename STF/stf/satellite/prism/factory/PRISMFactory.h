@@ -191,7 +191,7 @@ void PRISMFactory<Env, App>::create_controller(){
 	TRIAD*            PRISM_TRIAD           = new TRIAD();
 	RMMEKF*           PRISM_RMMEKF          = new RMMEKF();
 
-	//制御ブロックのコンテナ
+	//制御ブロックのコンテナ Control block container
 	STRATEGY* PRISM_CONTROLLER = new STRATEGY(PRISM_MAG_COMBINER, this->global_->pr_mtq);
 	PRISM_CONTROLLER->setStrategy(STRATEGY::TorqueCombiner, PRISM_TORQUE_COMBINER);
 	PRISM_CONTROLLER->setStrategy(STRATEGY::MagCombiner, PRISM_MAG_COMBINER);
@@ -207,12 +207,12 @@ void PRISMFactory<Env, App>::create_controller(){
 	PRISM_CONTROLLER->setStrategy(STRATEGY::TRIAD, PRISM_TRIAD);
 	PRISM_CONTROLLER->setStrategy(STRATEGY::RMMEKF, PRISM_RMMEKF);
 	
-	// 磁気モーメント合成
+	// 磁気モーメント合成 Magnetic moment synthesis
 	PRISM_MAG_COMBINER->connect_source<0>(PRISM_CROSSPRODUCT);
 	PRISM_MAG_COMBINER->connect_source<1>(PRISM_BDOT);
 	PRISM_MAG_COMBINER->connect_source<2>(PRISM_RMMCOMP);
 
-	// 残留磁気補償
+	// 残留磁気補償 Remanence compensation
 	// input: RMMEKF -> MagneticMoment
 	PRISM_RMMCOMP->connect_source<0>(PRISM_RMMEKF);
 
@@ -226,7 +226,7 @@ void PRISMFactory<Env, App>::create_controller(){
 	PRISM_CROSSPRODUCT->connect_source<0>(PRISM_TORQUE_COMBINER);
 	PRISM_CROSSPRODUCT->connect_source<1>(this->global_->pr_tam);
 	
-	// トルク合成
+	// トルク合成 Torque synthesis
 	PRISM_TORQUE_COMBINER->connect_source<0>(PRISM_DECOUPLING);
 	PRISM_TORQUE_COMBINER->connect_source<1>(PRISM_RATEDUMPING);
 	PRISM_TORQUE_COMBINER->connect_source<2>(PRISM_PID);
@@ -277,15 +277,16 @@ void PRISMFactory<Env, App>::create_controller(){
 	
 	///////////////////////////////////////////////////
 	// 制御ブロックへのアクセスが必要な初期化処理
-
+	//Initialization that requires access to the control block
 	this->global_->pr_controlstrategy = PRISM_CONTROLLER;
 
 	// AOCSテレメトリにカルマンフィルタとTRIADのパラメータを追加
+	//Added Kalman filter and TRIAD parameters to AOCS telemetry
 	this->global_->pr_aocstmstrategy->add_tmlist(new interface::PRISMEKFIterator<1000>(PRISM_EKF));
 	this->global_->pr_aocstmstrategy->add_tmlist(new interface::PRISMRMMEKFIterator<1000>(PRISM_RMMEKF));
 	this->global_->pr_aocstmstrategy->add_tmlist(new interface::PRISMSunMagTRIADIterator<1000>(PRISM_TRIAD));
 
-	//　AOCS系コマンド
+	//　AOCS系コマンド AOCS commands
 	datatype::Time t_init = this->global_->pr_clock->get_time();
 
 	this->global_->pr_c_aen0 = new command::SimpleMemberFunctionCommand<STRATEGY, void>(t_init,PRISM_CONTROLLER,&STRATEGY::enable);
@@ -298,7 +299,7 @@ void PRISMFactory<Env, App>::create_controller(){
 	this->global_->pr_c_amG = new command::IteratorStreamCommand<1>(t_init, new interface::PRISMControlBlockIterator(PRISM_CONTROLLER));
 
 	///////////////////////////////////////////////////
-	// 制御則をモードに登録
+	// 制御則をモードに登録 Register control law to mode
 	this->global_->pr_amode->add_list<core::strategy::control::IControlStrategy>(PRISM_CONTROLLER);
 }
 
@@ -310,10 +311,10 @@ void PRISMFactory<Env, App>::create_command(){
 	typedef core::manager::ModeManagerBase ModeManager;
 	datatype::Time t_init = this->global_->pr_clock->get_time();
 
-	// 生存確認
+	// 生存確認 Survival confirmation
 	this->global_->pr_c_alv = new core::command::MessageCommand(t_init, "alive");
 
-	// ヒーター制御関係
+	// ヒーター制御関係 Heater control
 	this->global_->pr_c_hta = 
 		new core::command::SimpleMemberFunctionCommand<Heater, void>
 		(t_init, this->global_->pr_heater,&Heater::enable);
@@ -330,7 +331,7 @@ void PRISMFactory<Env, App>::create_command(){
 		new core::command::TypeListMemberFunctionCommand<Heater, int, 3>
 		(t_init, this->global_->pr_heater,&Heater::set_params, 0, 0, 0);
 
-	// 時刻設定・時刻取得関係
+	// 時刻設定・時刻取得関係 Time setting/time acquisition
 	this->global_->pr_c_rtg = 
 		new core::command::GetIteratorCommand<Clock, interface::DateTimeIterator, const datatype::DateTime, 100>(t_init, this->global_->pr_clock,&Clock::get_datetime);
 
@@ -345,7 +346,7 @@ void PRISMFactory<Env, App>::create_command(){
 		new core::command::TypeListMemberFunctionCommand<Clock, int, 2>
 		(t_init, this->global_->pr_clock,&Clock::set_time, 0, 0);
 
-	//CDHテレメ
+	//CDHテレメ CDH teleme
 	this->global_->pr_c_tlg = 
 		new core::command::IteratorStreamCommand<100>(t_init, this->global_->pr_telemetryiterator);
 
@@ -360,7 +361,7 @@ void PRISMFactory<Env, App>::create_command(){
 		new core::command::UnAryMemberFunctionCommand<Telem, void, int>
 		(t_init, this->global_->pr_tmstrategy,&Telem::set_time, 0);
 
-	//電源系
+	//電源系 Power system
 	//this->global_->pr_c_pd = 
 	//	new core::command::SwitchCommand();
 	
@@ -385,6 +386,7 @@ void PRISMFactory<Env, App>::create_command(){
 		(t_init, this->global_->pr_battheater,&Heater::set_params, 0, 0, 0);
 
 	//AOCS系->一部はcontrollerHotSpotでインスタンス化
+	//AOCS system -> Partly instantiated with controllerHotSpot
 	this->global_->pr_c_atw = new core::command::UnAryMemberFunctionCommand<Telem, void, bool>
 		(t_init, this->global_->pr_aocstmstrategy,&Telem::setstate, false);
 
@@ -403,7 +405,7 @@ void PRISMFactory<Env, App>::create_telemetry(){
 	this->global_->pr_tmstrategy = new core::strategy::telemetry::PRISMTelemetryStrategy<Env, 1000>(this->global_->pr_tmhandler, this->global_->pr_aocsdatapool, this->global_->pr_eventdatapool, this->global_->pr_clock);
 	this->global_->pr_aocstmstrategy = new core::strategy::telemetry::PRISMTelemetryStrategy<Env, 1000>(this->global_->pr_tmhandler, this->global_->pr_aocsdatapool, this->global_->pr_eventdatapool, this->global_->pr_clock);
 	///////////////////////////////////////////////////
-	// テレメトリストラテジをモードに登録
+	// テレメトリストラテジをモードに登録  Register telemetry strategy in mode
 	this->global_->pr_safemode->add_list<core::strategy::telemetry::ITelemetryStrategy>(this->global_->pr_tmstrategy);
 	this->global_->pr_dpmode->add_list<core::strategy::telemetry::ITelemetryStrategy>(this->global_->pr_tmstrategy);
 	this->global_->pr_dsmode->add_list<core::strategy::telemetry::ITelemetryStrategy>(this->global_->pr_tmstrategy);
@@ -488,9 +490,10 @@ void PRISMFactory<Env, App>::create_switches(){
 template<class Env, class App>
 void PRISMFactory<Env, App>::create_functor(){
 	////////////////////////////////
-	// モード変更関係のファンクタ
+	// モード変更関係のファンクタ  Mode change functor
 
 	//一定時間が経過したらSafeModeに移行するファンクタ
+	//A functor that switches to Safe Mode after a certain period of time
 	core::functor::IFunctor* timerfunc = new functor::Functor<functor::Getter_Over<datatype::Time, devicedriver::clock::ITimeClock>, core::functor::ModeChangeFunc>
 			(
 				new functor::Getter_Over<datatype::Time, devicedriver::clock::ITimeClock>(
@@ -501,13 +504,17 @@ void PRISMFactory<Env, App>::create_functor(){
 	this->global_->pr_resetmode->add_list(timerfunc);
 
 	//EventDataPoolのAnomaryEventが一定数溜まったらSafeModeに移行するファンクタ
+	//A functor that shifts to Safe Mode after a certain number of 
+	//Event Data Pool Anomaly Events have accumulated
 
 	//撮影予約時刻に到達したらDPModeに移行するファンクタ
+	//A functor that shifts to DP Mode when the reserved shooting time is reached
 
 	//撮影完了したらDSModeに移行するファンクタ
+	//A functor that switches to DS Mode when shooting is completed
 
 	//////////////////////////////////
-	//  アノマリー関係のファンクタ
+	//  アノマリー関係のファンクタ  Anomaly-related functor
 }
 
 template<class Env, class App>

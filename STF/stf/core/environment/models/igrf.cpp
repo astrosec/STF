@@ -1,6 +1,7 @@
 /**
  * @file   igrf.cpp
  * @brief  NJHILSから持ってきたIGRF計算モジュールを，igrf名前空間でラップして使用．
+ * Use the IGRF calculation module brought from wrapping in the igrf namespace
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -190,6 +191,7 @@ void mfldc(double athe, double alon, double ar,
 }
 
 //地心座標から測地座標に変換
+//Convert geocentric coordinates to geodetic coordinates
 void gcomp(double *axg, double *ayg, double *azg)
 {   double bthc, rc, rs, rep2, tlat, tlat2, rlatp, rmc, rmc2, rmc3, ffp, ff;
     double cga, sga, xg, zg;
@@ -225,6 +227,8 @@ void gcomp(double *axg, double *ayg, double *azg)
 
 //GIGRFの計算（G, D,P-GRFの区別なく計算）
 //WGS84モデルで計算
+////GIGRF calculation (calculation without distinguishing G, D, P-GRF)
+//Calculated with WGS84 model
 void gigrf(int gen, double year)
 {   int maxod, i, n, m, l, k, ncol, nlin;
     double y1, y2, yr1, yr2;
@@ -305,6 +309,7 @@ void igrfc(double fido, double fkeido, double hght, double *tf)
 
 
 //磁気要素に変換
+//Convert to magnetic element
 void igrfm(double fm[6])
 {   double gx, gy, gz, h, dip, dec;
     gcomp(&gx, &gy, &gz);
@@ -690,6 +695,7 @@ int main(void)
 */
 
 //地磁気要素（地心表現）をECI座標へ
+//Geomagnetic element (geocentric representation) to ECI coordinates
 int TransMagaxisToECI(const double* mag, double* pos, double lonrad, double thetarad, double gmst)
 {
 	RotationY(mag, pos, 180*DEG2RAD-thetarad);
@@ -701,20 +707,23 @@ int TransMagaxisToECI(const double* mag, double* pos, double lonrad, double thet
 
 //IGRFの計算を実行するメインルーチン
 //Output	:	mag[3]	ECI座標での磁界の値[nT]
+//Main routine to execute IGRF calculation
+//Output: mag[3] Value of magnetic field in ECI coordinates [nT]
 void IgrfCalc(double decyear, double latrad, double lonrad, double alt, double side, double* mag)
 {
 	static bool first_flg = true;
 
-	double f;
+	double f; 
 
 	if(first_flg==true) {
-		gigrf(10, decyear);	//ファイル読み込み
+		gigrf(10, decyear);	//ファイル読み込み File reading
 		first_flg = false;
 	}
-	tyear(decyear);			//実行年の設定
+	tyear(decyear);			//実行年の設定 Execution year setting
 	igrfc(latrad*RAD2DEG, lonrad*RAD2DEG, alt*1000,&f);	//実行位置の設定&Executeはこの中に含む
+	//Execution position setting & Execute is included in this
 
-	mag[0] = x;	//x, y, zはigrf.cppグローバル変数
+	mag[0] = x;	//x, y, zはigrf.cppグローバル変数  x, y, z are igrf.cpp global variables
 	mag[1] = y;
 	mag[2] = z;
 	double thetarad = acos(cth); //[0<=theta<=pi?]

@@ -1,6 +1,6 @@
 /**
  * @file   Magnetic.cpp
- * @brief  磁気関係の物理量を表す
+ * @brief  磁気関係の物理量を表す  Represents a magnetic-related physical quantity
  *
  * @author Taiga Nomi
  * @date   2011.02.16

@@ -1,7 +1,7 @@
 /**
  * @file   SelectingOutput.h
  * @brief  指定したイテレータをテレメトリとして整形するテレメトリ生成ストラテジ．
- *
+ * Telemetry generation strategy that shapes the specified iterator as telemetry.
  * @author Taiga Nomi
  * @date   2011.02.16
  * @todo   CreateIndexの実装

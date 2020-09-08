@@ -1,6 +1,7 @@
 /**
  * @file   EulerAngle.h
  * @brief  z-y-xオイラー角(rad)．
+ * z-y-x Euler angles (rad).
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -14,6 +15,7 @@ namespace stf {
 namespace datatype {
 
 //! 3-2-1(z-y-x)Euler Angleを表現する．単位rad
+	//Represents. Unit rad
 /*! */
 class EulerAngle : public StaticVector<3> {
 public:
@@ -27,6 +29,7 @@ public:
 	~EulerAngle(){}
 
 	//! 行列式を１に調整する
+	//Adjust determinant to 1
 	virtual void normalize();
 };
 

@@ -1,6 +1,7 @@
 /**
  * @file   CrossProduct.cpp
  * @brief  クロスプロダクト則を用いて要求出力トルクを磁気モーメントに変換する制御ブロック．
+ * Control block that converts required output torque to magnetic moment using cross product rule
  *
  * @author Taiga Nomi
  * @date   2011.02.16

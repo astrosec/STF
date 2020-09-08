@@ -19,6 +19,7 @@ class Mode;
 namespace functor {
 
 //! 引数なしファンクタの抽象インターフェース．
+	//An abstract interface of a functor without arguments.
 /*! 
 */
 class IFunctor {
@@ -27,8 +28,9 @@ public:
 };
 
 //! 1引数ファンクタの抽象インターフェース．
+//Abstract interface for one-argument functor
 /*! 
-	@tparam T 引数の型．
+	@tparam T 引数の型．@tparam T argument type
 */
 template<class T>
 class IUnAryFunctor {
@@ -42,22 +44,30 @@ public:
 	条件判定のアルゴリズムを入力ファンクタに，対処のアルゴリズムを出力ファンクタに分離することで，
 	異常対処やアプリケーション固有の条件判定式を柔軟に生成する．
 	ファンクタはSystemManagerまたはユーザーコードの中で実行される．
+
+	A functor that holds an input functor and an output functor on a pointer.
+By separating the condition judgment algorithm from the input functor and the countermeasure algorithm from the output functor,
+It is possible to flexibly generate condition judgment expressions unique to handling errors and applications.
+Functors run in SystemManager or user code.
+
 	@code
 
 	extern Functor< Getter_Over<Scalar, Gyro>, MSG > functor; //ジャイロの取得値が一定値を超えたら，デバッグメッセージを出力するファンクタ
+	//A functor that outputs a debug message when the acquired value of the gyro exceeds a certain value
 	extern Functor< Getter_Over<Scalar, Gyro>, ModeChangeFunc > functor; //ジャイロの取得値が一定値を超えたら，モードを切り替えるファンクタ
+	//A functor that switches modes when the gyro acquisition value exceeds a certain value
 
 	@endcode
-	@tparam InputFunctor  入力ファンクタの型．
-	@tparam OutputFunctor 出力ファンクタの型．
+	@tparam InputFunctor  入力ファンクタの型．Input functor type
+	@tparam OutputFunctor 出力ファンクタの型．Output functor type
 */
 template <class InputFunctor, class OutputFunctor>
 class Functor : virtual public IFunctor{
 public:
 	Functor(const InputFunctor* in, const OutputFunctor* out) : in_(in), out_(out) {}
 	virtual void operator()() const {
-		if((*in_)()){//引数なし，bool値trueが帰ってきたら
-			(*out_)();//指定の動作を実施
+		if((*in_)()){//引数なし，bool値trueが帰ってきたら No arguments, bool value true is returned
+			(*out_)();//指定の動作を実施 Perform specified action
 		}
 	}
 private:
@@ -71,14 +81,21 @@ private:
 	@tparam InputFunctor  入力ファンクタの型．
 	@tparam OutputFunctor 出力ファンクタの型．
 	@tparam Arg           出力ファンクタの起動時引数の型．
+
+	One-argument functor class.
+/*!
+A functor that holds an input functor with no arguments and an output functor with one argument in the pointer.
+@tparam InputFunctor Input functor type.
+@tparam OutputFunctor Output functor type.
+@tparam Arg The type of argument when the output functor is started.
 */
 template <class InputFunctor, class OutputFunctor, class Arg>
 class UnAryFunctor : public IFunctor{
 public:
 	UnAryFunctor(const InputFunctor* in, const OutputFunctor* out, const Arg& arg) : in_(in), out_(out), arg_(arg) {}
 	virtual int operator()() const {
-		if((*in_)()){//引数なし，bool値trueが帰ってきたら
-			return (*out_)(arg_);//指定の動作を実施
+		if((*in_)()){//引数なし，bool値trueが帰ってきたら No arguments, bool value true is returned
+			return (*out_)(arg_);//指定の動作を実施 Perform specified action
 		}
 		return 0;
 	}

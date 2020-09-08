@@ -4,7 +4,7 @@
  *
  * @author Taiga Nomi
  * @date   2011.02.16
- * @todo   修正OR削除
+ * @todo   修正OR削除 Modification OR deletion
  */
 #include "UnaryFunctionCommand.h"
 

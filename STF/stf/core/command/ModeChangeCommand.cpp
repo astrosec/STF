@@ -1,6 +1,7 @@
 /**
  * @file   ModeChangeCommand.cpp
  * @brief  モード変更を行うコマンド．
+ * Command to change mode
  *
  * @author Taiga Nomi
  * @date   2011.02.16

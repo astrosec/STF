@@ -1,6 +1,6 @@
 /**
  * @file   TypeConverter.h
- * @brief  単位や姿勢表現の相互変換を行うユーティリティ．
+ * @brief  単位や姿勢表現の相互変換を行うユーティリティ．//Utility for mutual conversion of units and posture expressions
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -19,6 +19,9 @@ namespace datatype {
 
 //! 単位や姿勢表現の相互変換を行うユーティリティ．
 /*! datatypeモジュール間の相互結合を防ぐためにこのクラスにstaticメソッドとして変換式をまとめている.*/
+	/*//! A utility that performs mutual conversion of units and posture expressions.
+/*! Conversion expressions are grouped as static methods in this class to prevent mutual coupling between datatype modules.*/
+
 class TypeConverter {
 public:
     static Quaternion toQuaternion(const DCM &dcm);
@@ -34,12 +37,13 @@ public:
 	static PositionInfo toPositionInfo(const OrbitInfo &orb);
 };
 
-//! QuaternionからZ-Y-Xオイラー角への変換．一旦DCMを経由する
+//! QuaternionからZ-Y-Xオイラー角への変換．一旦DCMを経由する //To Z-Y-X Euler angles. Once via DCM
 inline EulerAngle TypeConverter::toEulerAngle(const Quaternion &q){
 	return TypeConverter::toEulerAngle(TypeConverter::toDCM(q));
 }
 
 //! Z-Y-Xオイラー角からQuaternionへの変換．一旦DCMを経由する
+//Conversion from Z-Y-X Euler angles to Quaternion. Once via DCM
 inline Quaternion TypeConverter::toQuaternion(const EulerAngle &euler_angle)
 {
 	return TypeConverter::toQuaternion(TypeConverter::toDCM(euler_angle));

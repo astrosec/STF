@@ -1,6 +1,6 @@
 /**
  * @file   Magnetic.h
- * @brief  磁気関係の物理量を表す
+ * @brief  磁気関係の物理量を表す  Represents a magnetic-related physical quantity
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -12,7 +12,7 @@
 namespace stf { 
 namespace datatype {
 
-//! 3次元磁束密度(T)を表す．
+//! 3次元磁束密度(T)を表す．It represents the three-dimensional magnetic flux density (T).
 /*! */
 class MagneticField : public StaticVector<3> {
 public:
@@ -24,7 +24,7 @@ public:
 private:
 };
 
-//! 3次元磁気モーメント(Am2)を表す．
+//! 3次元磁気モーメント(Am2)を表す．Represents the dimensional magnetic moment (Am2).
 /*! */
 class MagneticMoment : public StaticVector<3> {
 public:

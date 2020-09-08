@@ -1,6 +1,7 @@
 /**
  * @file   SatelliteModel.h
  * @brief  衛星質量特性を表現するクラス．
+ *			A class that represents satellite mass characteristics.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -14,6 +15,7 @@ namespace stf {
 namespace datatype {
 
 //! 衛星質量特性を表現するクラス．
+	//A class that represents satellite mass characteristics.
 /*! */
 class SatelliteModel {
 public:
@@ -24,8 +26,8 @@ public:
 	const StaticMatrix<3, 3>& getI() const { return I_; }
 	double getM() const { return M_; }
 private:
-	StaticMatrix<3, 3> I_;//!< 慣性テンソル(kgm2)
-	double M_;//!< 質量(kg)
+	StaticMatrix<3, 3> I_;//!< 慣性テンソル(kgm2) //!< Inertia tensor (kgm2)
+	double M_;//!< 質量(kg)  //Mass(kg)
 };
 
 } /* End of namespace stf::datatype */

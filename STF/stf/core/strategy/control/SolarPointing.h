@@ -1,7 +1,7 @@
 /**
  * @file   SolarPointing.h
  * @brief  MTQで太陽指向制御を行うための制御ブロック．
- *
+ * Control block for sun-oriented control with MTQ.
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -23,6 +23,13 @@ namespace control {
 	原理は制御ハンドブック9.3.3.3項参照．
 	入力:衛星周辺磁場，太陽方向ベクトル
 	出力:MTQ出力磁気モーメント
+
+	Control block for sun-oriented control with MTQ.
+/*!
+Refer to Section 9.3.3.3 of the Control Handbook for the principle.
+Input: Magnetic field around satellite, sun direction vector
+Output: MTQ output magnetic moment
+
 */
 class SolarPointing
 	: virtual public StrategyBase, 

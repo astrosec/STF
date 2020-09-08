@@ -1,6 +1,6 @@
 /**
  * @file   PRISMEKF.h
- * @brief  PRISMジャイロバイアスEKF
+ * @brief  PRISMジャイロバイアスEKF PRISM Gyro Bias EKF
  *
  * @author Taiga Nomi
  * @date   2011.02.16

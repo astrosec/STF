@@ -28,6 +28,14 @@ namespace control {
 	3軸それぞれに角速度PIDを適用する．クロスカップリング項が無視できない場合，CouplingCompensationブロックを併用して打ち消す必要がある
 	入力:磁場，角速度
 	出力:3軸磁気モーメント
+
+	Extended Kalman filter control block that estimates the residual magnetic moment. Unimplemented.
+/*!
+The angular velocity PID is applied to each of the three axes. If the cross-coupling term cannot be ignored, it is necessary to cancel it by using the Coupling Compensation block together.
+Input: magnetic field, angular velocity
+Output: 3-axis magnetic moment
+
+
 */	
 class RMMEKF : public StrategyBase,
 	public devicedriver::InputPorts< TYPELIST_2( datatype::MagneticField, datatype::StaticVector<3> ) >,
@@ -44,7 +52,7 @@ public:
 	virtual ~RMMEKF(){}
 	virtual void do_compute(const datatype::Time& t){
 		util::Trace trace(util::Trace::kControlBlock, name_);
-	}//伝搬，更新処理
+	}//伝搬，更新処理 Propagation, update processing
 };
 
 

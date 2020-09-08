@@ -1,6 +1,8 @@
 /**
  * @file   TypeListFunctionCommand.h
  * @brief  複数個の引数を取るメンバ関数を起動するコマンド．TypeListを使って纏めたい->TBD
+ * A command that starts a member function that takes multiple arguments. 
+ * I want to summarize using TypeList -> TBD
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -17,9 +19,10 @@ namespace core {
 namespace command {
 
 //! N引数のメンバ関数を起動するコマンド．
-/*! @tparam T   メンバ関数を保持するクラス．
-	@tparam ARG 引数の型．
-	@tparam N   引数の数．
+	//Command that invokes a member function with N arguments
+/*! @tparam T   メンバ関数を保持するクラス．Class holding member function
+	@tparam ARG 引数の型．Argument type.
+	@tparam N   引数の数．Number of arguments.
  */
 template<class T, class ARG, int N>
 class TypeListMemberFunctionCommand : public Command {
@@ -45,9 +48,9 @@ private:
 	ARG arg_;
 };
 
-//! 2引数のメンバ関数を起動するコマンド．
-/*! @tparam T   メンバ関数を保持するクラス．
-	@tparam ARG 引数の型．
+//! 2引数のメンバ関数を起動するコマンド．Command that invokes a two-argument member function
+/*! @tparam T   メンバ関数を保持するクラス．Class holding member function
+	@tparam ARG 引数の型．Argument type
  */
 template<class T, class ARG>
 class TypeListMemberFunctionCommand<T, ARG, 2> : public Command {
@@ -74,9 +77,9 @@ private:
 	ARG arg2_;
 };
 
-//! 3引数のメンバ関数を起動するコマンド．
-/*! @tparam T   メンバ関数を保持するクラス．
-	@tparam ARG 引数の型．
+//! 3引数のメンバ関数を起動するコマンド．A command to start a three-argument member function.
+/*! @tparam T   メンバ関数を保持するクラス．A class that holds member functions.
+	@tparam ARG 引数の型．Argument type.
  */
 template<class T, class ARG>
 class TypeListMemberFunctionCommand<T, ARG, 3> : public Command {
@@ -105,9 +108,9 @@ private:
 	ARG arg3_;
 };
 
-//! 4引数のメンバ関数を起動するコマンド．
-/*! @tparam T   メンバ関数を保持するクラス．
-	@tparam ARG 引数の型．
+//! 4引数のメンバ関数を起動するコマンド．A command to start a member function with four arguments.
+/*! @tparam T   メンバ関数を保持するクラス．Class holding member function
+	@tparam ARG 引数の型．Argument type.
  */
 template<class T, class ARG>
 class TypeListMemberFunctionCommand<T, ARG, 4> : public Command {
@@ -138,9 +141,9 @@ private:
 	ARG arg4_;
 };
 
-//! 5引数のメンバ関数を起動するコマンド．
-/*! @tparam T   メンバ関数を保持するクラス．
-	@tparam ARG 引数の型．
+//! 5引数のメンバ関数を起動するコマンド．A command to start a member function with 5 arguments.
+/*! @tparam T   メンバ関数を保持するクラス．Class holding member function
+	@tparam ARG 引数の型．Argument type.
  */
 template<class T, class ARG>
 class TypeListMemberFunctionCommand<T, ARG, 5> : public Command {
@@ -173,9 +176,9 @@ private:
 	ARG arg5_;
 };
 
-//! 6引数のメンバ関数を起動するコマンド．
-/*! @tparam T   メンバ関数を保持するクラス．
-	@tparam ARG 引数の型．
+//! 6引数のメンバ関数を起動するコマンド．A command to start a member function with 6 arguments.
+/*! @tparam T   メンバ関数を保持するクラス．A class that holds member functions.
+	@tparam ARG 引数の型．A class that holds member functions.
  */
 template<class T, class ARG>
 class TypeListMemberFunctionCommand<T, ARG, 6> : public Command {

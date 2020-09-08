@@ -1,7 +1,7 @@
 /**
  * @file   SwitchCommand.h
  * @brief  機器のスイッチングを行うコマンド．
- *
+ * Commands for switching devices
  * @author Taiga Nomi
  * @date   2011.02.16
  */
@@ -16,9 +16,10 @@ namespace stf {
 namespace core {
 namespace command {
 
-//! 機器のスイッチングを行うコマンド．
+//! 機器のスイッチングを行うコマンド．Commands for switching devices
 /*! 
 	ISwitchableインターフェースを持ったオブジェクトに対して，onまたはoffを実行．
+	//Execute on or off for the object with interface.
  */
 class SwitchCommand : public Command {
 public:

@@ -44,6 +44,9 @@ core::command::Command* __prism_adcscmd_analyze<environment::Simulator<app::PRIS
 //
 // 通信系CPUとのインターフェースを成すコマンドレシーバのデバッグ用具象クラス．
 //  プル型のコマンド（通信系からの要求をもとに，適切な値を返す）に対しては
+//A concrete class for debugging the command receiver that forms an interface with the communication CPU.
+//For pull-type commands (which return an appropriate value based on the request from the communication system)
+
 template<class T>
 class PRISMCommandReceiver: virtual public ICommandReceiver, public RootObject {
 public:
@@ -64,16 +67,20 @@ private:
 };
 
 //外部デバイスからコマンドの受信を行う．
+//Receive commands from external devices
 template<class T>
 void PRISMCommandReceiver<T>::receive_command()
 {
+	printf("hello\n");
 }
 
 //デバッグ用の特殊化．外部ファイルから1行ずつ読み込み，
+//Specialization for debugging. Read line by line from an external file,
 template<> void PRISMCommandReceiver<environment::Simulator<app::PRISM> >::receive_command();
 
 
 // デバッグ用なので送信機に送る変わりにコンソールに出力する
+//Because it is for debugging, output to the console instead of sending to the transmitter
 template<class T>
 void PRISMCommandReceiver<T>::send_packet(const datatype::String& msg)
 {
@@ -81,6 +88,7 @@ void PRISMCommandReceiver<T>::send_packet(const datatype::String& msg)
 }
 
 // デバッグ用なので送信機に送る変わりにコンソールに出力する
+//Because it is for debugging, output to the console instead of sending to the transmitter
 template<class T>
 void PRISMCommandReceiver<T>::send_packet(int msg)
 {
@@ -95,6 +103,7 @@ void PRISMCommandReceiver<T>::add_command(command::Command* cmd)
 
 
 //コマンドを解釈して，対応するオブジェクトを投げる
+//Interpret the command and throw the corresponding object
 template<class T>
 void PRISMCommandReceiver<T>::analyzeCommand_(char* cmd)
 {
@@ -103,6 +112,7 @@ void PRISMCommandReceiver<T>::analyzeCommand_(char* cmd)
 	char* params;
 	int paramlength;
 	//コマンド解釈部
+	//Command interpreter
 
 	//
 	const datatype::Time t = this->clock_->get_time();

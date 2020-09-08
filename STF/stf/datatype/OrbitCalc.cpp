@@ -1,6 +1,7 @@
 /**
  * @file   OrbitCalc.cpp
  * @brief  軌道関係情報を計算するメソッドをstaticメンバとしてまとめたクラス．
+ * //A class that summarizes methods for calculating orbital relationship information as static members
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -25,10 +26,11 @@ namespace datatype {
 
 StaticVector<2> OrbitCalc::getSunDirection2D(const DateTime& time){
 	//制御ハンドブックP.280. 地球中心からの太陽方向ベクトルを求める
+	//Control Handbook P.280. Finding Sun Direction Vector from Earth Center
 	double T  = (time.get_julian() - 2451545.0) / 36525 ;
 	double M = util::math::DEG2RAD * (357.5256 + 35999.045 * T);
 	double lambda = util::math::DEG2RAD * (282.94 + M + (6892 / 3600) * sin(M) + (72/3600) * sin(2*M) - (0.002652 - (1250.09115 / 3600) * T));
-	double eta = util::math::DEG2RAD * 23.43929111;//平均黄道傾角
+	double eta = util::math::DEG2RAD * 23.43929111;//平均黄道傾角  Mean ecliptic inclination
 	StaticVector<3> v;
 	v[0] = cos(lambda);
 	v[1] = sin(lambda) * cos(eta);
@@ -47,10 +49,11 @@ StaticVector<3> OrbitCalc::getEarthDirection3D(const PositionInfo& p){
 
 StaticVector<3> OrbitCalc::getSunDirection3D(const DateTime& time){
 	//制御ハンドブックP.280. 地球中心からの太陽方向ベクトルを求める
+	//Control Handbook P.280. Finding Sun Direction Vector from Earth Center
 	double T  = (time.get_julian() - 2451545.0) / 36525 ;
 	double M = util::math::DEG2RAD * (357.5256 + 35999.045 * T);
 	double lambda = util::math::DEG2RAD * (282.94 + M + (6892 / 3600) * sin(M) + (72/3600) * sin(2*M) - (0.002652 - (1250.09115 / 3600) * T));
-	double eta = util::math::DEG2RAD * 23.43929111;//平均黄道傾角
+	double eta = util::math::DEG2RAD * 23.43929111;//平均黄道傾角  Mean ecliptic inclination
 	StaticVector<3> v;
 	v[0] = cos(lambda);
 	v[1] = sin(lambda) * cos(eta);
@@ -58,12 +61,12 @@ StaticVector<3> OrbitCalc::getSunDirection3D(const DateTime& time){
 	return v;
 }
 
-//衛星座標系における地球方向ベクトルを計算．
+//衛星座標系における地球方向ベクトルを計算．Mean ecliptic inclination
 StaticVector<3> OrbitCalc::getEarthDirectionInBodyFrame(const PositionInfo& p, const Quaternion& q){
 	return - (datatype::TypeConverter::toDCM(q) * p.position) ;
 }
 
-//衛星座標系における太陽方向ベクトルを計算．
+//衛星座標系における太陽方向ベクトルを計算．  Calculate the sun direction vector in the satellite coordinate system.
 StaticVector<3> OrbitCalc::getSunDirectionInBodyFrame(const DateTime& time, const Quaternion& q){
 	return datatype::TypeConverter::toDCM(q) * getSunDirection3D(time);
 }

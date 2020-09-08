@@ -20,6 +20,8 @@ void TelemetryManagerBase::notify(const mode::Mode* value){
 
 void TelemetryManagerBase::run()
 {
+	printf(this->name_.to_char());
+	printf("\n");
 	util::Trace trace(util::Trace::kManager, "run TelemetryManager");
 	if(this->telem_ == 0){
 		trace.debug("skip");

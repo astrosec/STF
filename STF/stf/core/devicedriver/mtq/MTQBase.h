@@ -36,6 +36,9 @@ private:
 		//線形性誤差の付加→TBD
 		//this->linearity_ * 0.01
 		//DBへ記録
+		// Add linearity error → TBD
+		//this->linearity_ * 0.01
+		//Record to DB
 		if(this->datapool_ != 0){
 			datapool_->set<MTQBase<environment::Simulator<App> >>(this->datapool_hold_index_, this->output_);
 		}

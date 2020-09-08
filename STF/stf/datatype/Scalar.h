@@ -1,6 +1,7 @@
 /**
  * @file   Scalar.h
  * @brief  スカラー物理量を表現するクラス．
+ *			Class that represents scalar physical quantity
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -15,6 +16,7 @@ namespace stf {
 namespace datatype {
 
 //! スカラー物理量を表現するクラス．
+	//Class that represents physical quantity
 /*!  */
 class Scalar : public IAocsData {
 public:

@@ -23,6 +23,8 @@ void SystemManagerBase::notify(const mode::Mode* value){
 
 void SystemManagerBase::run()
 {
+	printf(this->name_.to_char());
+	printf("\n");
 	util::Trace trace(util::Trace::kManager, "run SystemManager");
 
 	if(func_ == 0 || func_->size() == 0){

@@ -50,6 +50,7 @@ NJTelemetryHandler<T>::NJTelemetryHandler()
 : console_out_(true), ofs_(0)
 {
 	//引数なしの場合は標準出力にのみ表示，ログはとらない
+	//When there is no argument, it is displayed only on the standard output and is not logged.
 }
 
 template<class T>
@@ -61,7 +62,8 @@ NJTelemetryHandler<T>::~NJTelemetryHandler()
 template<class T>
 void NJTelemetryHandler<T>::logging(int value, int address)
 {
-   *this << value;//ロガーは書き込み先アドレスの指定を無視する   
+   *this << value;//ロガーは書き込み先アドレスの指定を無視する  
+   //Logger ignores destination address specification
 }
 
 template<class T>

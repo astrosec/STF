@@ -1,6 +1,7 @@
 /**
  * @file   NJFactory.h
  * @brief  Nano-JASMINEのオブジェクトを生成するファクトリ．
+ * Factory that creates Nano-JASMINE objects.
  *
  * @author Taiga Nomi
  * @date   2011.02.16
@@ -34,8 +35,8 @@ namespace factory {
 template<class Env, class App = app::NJ>
 class NJFactory : public SatelliteFactory<Env, App, NJFactory<Env, App> >{
 	friend class SatelliteFactory<Env, App, NJFactory<Env, App> >;
-	typedef Env Environment;//!< 環境クラス．
-	typedef App Application;//!< アプリケーションクラス．
+	typedef Env Environment;//!< 環境クラス． Environmental class.
+	typedef App Application;//!< アプリケーションクラス．Application class.
 
 
 	NJFactory(){ this->global_ = new NJGlobal<Env>();}
@@ -176,7 +177,8 @@ void NJFactory<Env, App>::create_component(){
 	this->global_->nj_rtc = new RTC(App::year, App::month, App::date);
 	this->global_->nj_gps = new GPS();
 
-	// ADC, 温度計，電圧計，電流計
+	// ADC, 温度計，電圧計，電流計 ADC, thermometer, voltmeter, ammeter
+	//ADC, thermometer, voltmeter, ammeter ADC, thermometer, voltmeter, ammeter
 	this->global_->nj_adc  = new devicedriver::NJADC<Env>();
 	this->global_->nj_temp1 = new devicedriver::NJCoarseTempSensor<Env>(global_->nj_adc);
 	this->global_->nj_temp2 = new devicedriver::NJFineTempSensor<Env>(global_->nj_adc);
@@ -184,7 +186,7 @@ void NJFactory<Env, App>::create_component(){
 	this->global_->nj_voltagesensor = new devicedriver::NJVoltageSensor<Env>(global_->nj_adc);
 
 	// SDCard, Command Recv
-	this->global_->nj_tmhandler = new devicedriver::tmhandler::NJTelemetryHandler<Env>("NJTelemetry.csv", false);
+	this->global_->nj_tmhandler =       new devicedriver::tmhandler::NJTelemetryHandler<Env>("NJTelemetry.csv", false);
 	this->global_->nj_commandreceiver = new devicedriver::cmhandler::NJCommandReceiver<Env>(this->global_->nj_commman, "command.txt", this->global_);
 
 	// Other Components
@@ -253,12 +255,18 @@ void NJFactory<Env, App>::create_controller(){
 	// セーフモード用の姿勢制御ブロック
 	// 姿勢決定:なし
 	// 姿勢制御:なし
+	// Posture control block for safe mode
+// attitude determination: none
+// Posture control: None
 	this->global_->nj_sfem->add_list<core::strategy::control::IControlStrategy>(NJ_CONTROLLER_SFEM);
 
 	/////////////////////////////////////
 	// スタンバイモード用の姿勢制御ブロック
 	// 姿勢決定:なし
 	// 姿勢制御:磁気センサのみの太陽捕捉制御(制御ハンドブック9.3.3.3)
+	// Posture control block for standby mode
+// attitude determination: none
+// Attitude control: Sun capture control with magnetic sensor only (Control Handbook 9.3.3.3)
 	SOLAR_POINTING* stbm_pointing = new SOLAR_POINTING(1);
 
 	stbm_pointing->connect_source<0>(this->global_->nj_st4);
@@ -271,6 +279,9 @@ void NJFactory<Env, App>::create_controller(){
     // 初期安定化モード用の姿勢制御ブロック
 	// 姿勢決定:なし(角速度のみ取得)
 	// 姿勢制御:Date-Dumping + CrossProduct
+	// Posture control block for initial stabilization mode
+// Posture determination: None (only angular velocity is acquired)
+// Posture control: Date-Dumping + CrossProduct
 	RATE_DUMPING* inim_ratedumping = new RATE_DUMPING(1, 0.1, 0.1, App::steptime);
 	CROSS_PRODUCT* inim_crossproduct = new CROSS_PRODUCT();
 
@@ -286,6 +297,9 @@ void NJFactory<Env, App>::create_controller(){
     // 粗姿勢制御モード用の姿勢制御ブロック
 	// 姿勢決定:ST4 & SunsensorTRIAD(EKFなし) + EKF(FOG)
 	// 姿勢制御:Quaternion FB
+	// Attitude control block for coarse attitude control mode
+// Posture determination: ST4 & Sunsensor TRIAD (without EKF) + EKF(FOG)
+// Posture control: Quaternion FB
 	TRIAD* ctrm_triad = new TRIAD();
 	EKF* ctrm_ekf = new EKF(this->global_->nj_mism);
 	SimplePID* ctrm_pid = new SimplePID(1, 0.01, 0.5, App::steptime, *(new datatype::Quaternion));
@@ -296,6 +310,7 @@ void NJFactory<Env, App>::create_controller(){
 
 	ctrm_pid->connect_source<0>(ctrm_ekf);
 	ctrm_pid->connect_source<1>(ctrm_ekf);//TRIADから直接QuaternionをとるのではなくEKFを挟むことで，蝕時にはFOGからの伝搬値が自動的に用いられる
+	//Propagation value from FOG is automatically used during eclipse by sandwiching EKF instead of taking Quaternion directly from TRIAD
 
 	ctrm_ekf->connect_source<0>(ctrm_triad);
 	ctrm_ekf->connect_source<1>(this->global_->nj_fog);
@@ -311,8 +326,12 @@ void NJFactory<Env, App>::create_controller(){
 	//精姿勢制御モード用の姿勢制御ブロック
 	// 姿勢決定:STT-FOG EKF & RMM補償
 	// 姿勢制御:
+	//Attitude control block for precise attitude control mode
+// Attitude determination: STT-FOG EKF & RMM compensation
+// Posture control:
 	EKF* ccdm_ekf = new EKF(this->global_->nj_mism);//->推定値を引き継ぐので観測モードでも使う
 	RMMEKF* ccdm_rmmekf = new RMMEKF();//->推定値を引き継ぐので観測モードでも使う
+	//-> Use in observation mode as it inherits the estimated value
 	QUATERNION_AVE* ccdm_q_average = new QUATERNION_AVE();
 	RMMCOMP* ccdm_rmmcomp = new RMMCOMP(-1);
 	PID* ccdm_pid = new PID(0.1, 0.001, 0.004, App::steptime);
@@ -333,8 +352,10 @@ void NJFactory<Env, App>::create_controller(){
 	ccdm_q_average->connect_source<1>(this->global_->nj_stty);
 
 	//制御トルクはRWへ出力
+	//Control torque output to RW
 	NJ_CONTROLLER_CCDM->set_actuator(this->global_->nj_rw, ccdm_pid);
 	//推定された残留磁気モーメントの補償成分は磁気キャンセラへ出力
+	//The estimated residual magnetic moment compensation component is output to the magnetic canceller.
 	NJ_CONTROLLER_CCDM->set_actuator(this->global_->nj_mc, ccdm_rmmcomp);
 
 	this->global_->nj_ccdm->add_list<core::strategy::control::IControlStrategy>(NJ_CONTROLLER_CCDM);
@@ -343,26 +364,35 @@ void NJFactory<Env, App>::create_controller(){
 	//観測モード用の姿勢制御ブロック．星像EKFやスピン軸の長期制御を除いて精制御モードの制御ブロックを引き継ぐ
 	// 姿勢決定：星像EKF?
 	// 姿勢制御：
+	//Attitude control block for observation mode. Takes over the control block of the fine control mode except for long-term control of the star image EKF and spin axis
+// Attitude decision: Star image EKF?
+// Posture control:
 	STAR_EKF* mism_starekf = new STAR_EKF();
 	PID* mism_pid = new PID(0.1, 0.001, 0.004, App::steptime);
 	SPINAXIS_CONTROLLER* mism_spincond = new SPINAXIS_CONTROLLER();
 
-	mism_pid->connect_source<0>(ccdm_ekf);//QuaternionはジャイロバイアスEKFから取得
+	mism_pid->connect_source<0>(ccdm_ekf);//QuaternionはジャイロバイアスEKFから取得 Quaternion obtained from Gyrobias EKF
 	mism_pid->connect_source<1>(mism_starekf);//角速度は星像EKFから取得．星像取得失敗時にはジャイロバイアスEKFの値がそのまま伝搬される
-	mism_pid->connect_source<2>(mism_spincond);//長期要求に基づいて目標Quaterionを更新
+	//The angular velocity is obtained from the star image EKF. When the star image acquisition fails, the value of gyro bias EKF is propagated as it is.
+	mism_pid->connect_source<2>(mism_spincond);//長期要求に基づいて目標Quaterionを更新 Update target quaterion based on long-term requirements
 
 	mism_starekf->connect_source<0>(ccdm_ekf);
 	//mism_starekf->connect_source<1>(this->global_->nj_rw);
 
 	//制御トルクはRWへ出力
+	//Control torque output to RW
 	NJ_CONTROLLER_MISM->set_actuator(this->global_->nj_rw, mism_pid);
 	//RMMは精制御モードと同じ経路でキャンセラへ
+	//RMM goes to the canceller by the same route as the precise control mode
 	NJ_CONTROLLER_MISM->set_actuator(this->global_->nj_mc, ccdm_rmmcomp);
 
 	//////////////////////////////////////
 	//アンローディングモード用の姿勢制御ブロック
 	// 姿勢決定：STT-サンセンサQUEST
 	// 姿勢制御：MTQ-RW分散
+	// Posture control block for unloading mode
+// Posture determination: STT-Sun sensor QUEST
+// Posture control: MTQ-RW dispersion
 	UNLOADING* unloading = new UNLOADING();
 	CROSS_PRODUCT* unloading_crossp = new CROSS_PRODUCT();
 	
@@ -382,6 +412,9 @@ void NJFactory<Env, App>::create_controller(){
 	// RMM推定用の姿勢制御ブロック
 	// 姿勢決定：STT-FOG EKF
 	// 姿勢制御：6面一定時間ずつ太陽指向制御
+	// Attitude control block for RMM estimation
+// Posture determination: STT-FOG EKF
+// Posture control: Sun-oriented control for 6 fixed time periods
 	PID* estmrmm_pid = new PID(0.1, 0.01, 0.01, App::steptime);
 	datatype::Time t(1000, 0);
 	QUATERNION_RMMESTM* estmrmm_q = new QUATERNION_RMMESTM(this->global_->nj_rtc, t);//1000秒ごとに別の面を太陽指向させる
@@ -397,6 +430,9 @@ void NJFactory<Env, App>::create_controller(){
 	// FOG推定用の姿勢制御ブロック
 	// 姿勢決定：STT-FOG EKF
 	// 姿勢制御：FOG3軸それぞれ±1e-3rad/s,±1e-2rad/sの計12モード
+	// Posture control block for FOG estimation
+// Posture determination: STT-FOG EKF
+// Attitude control: FOG 3 axes ±1e-3rad/s, ±1e-2rad/s, total 12 modes
 	PID* estmfog_pid = new PID(0.1, 0.01, 0.01, App::steptime);
 
 	NJ_CONTROLLER_ESTM_FOG->set_actuator(this->global_->nj_rw, estmfog_pid);
@@ -406,6 +442,9 @@ void NJFactory<Env, App>::create_controller(){
 	// MC推定用の姿勢制御ブロック
 	// 姿勢決定：STT-FOG EKF
 	// 姿勢制御：MC3軸それぞれ±0.2Am2,±0.4Am2,±0.6Am2の計18モード
+	//Posture control block for MC estimation
+// Posture determination: STT-FOG EKF
+// Posture control: 18 modes of ±0.2Am2, ±0.4Am2, ±0.6Am2 for each of 3 MC axes
 	MC_CONSTANT* estmmc = new MC_CONSTANT(this->global_->nj_rtc, t);
 
 	NJ_CONTROLLER_ESTM_MC->set_actuator(this->global_->nj_mc, estmmc);
@@ -415,6 +454,9 @@ void NJFactory<Env, App>::create_controller(){
 	// RW推定用の姿勢制御ブロック
 	// 姿勢決定：STT-FOG EKF
 	// 姿勢制御：RW4基それぞれ±5e-5Nm,±2.5e-5Nmの計16モード
+	//Attitude control block for RW estimation
+// Posture determination: STT-FOG EKF
+// Posture control: RW4 groups ±5e-5Nm, ±2.5e-5Nm, total 16 modes
 	RW_CONSTANT* estmrw = new RW_CONSTANT(this->global_->nj_rtc, t);
 
 	//NJ_CONTROLLER_ESTM_RW->set_actuator(this->global_->nj_rw1, &estmrw->outputport<0, datatype::StaticVector<3>>());
@@ -422,14 +464,17 @@ void NJFactory<Env, App>::create_controller(){
 
 	///////////////////////////////////////////////////
 	// 制御ブロックへのアクセスが必要な初期化処理
+	//Initialization that requires access to the control block
 
 	// EKFの状態量をテレメトリに出力
+	//EKF state quantity is output to telemetry
 	this->global_->nj_telemetrystrategy->add_tmlist(new interface::NJEKFIterator<1000>(ccdm_ekf));
 	this->global_->nj_telemetrystrategy->add_tmlist(new interface::NJRMMEKFIterator<1000>(ccdm_rmmekf));
 	this->global_->nj_telemetrystrategy->add_tmlist(new interface::NJSunMagTRIADIterator<1000>(ctrm_triad));
 
 	///////////////////////////////////////////////////
 	// 制御則をモードに登録
+	//Register control law to mode
 	this->global_->nj_sfem->add_list<core::strategy::control::IControlStrategy>(NJ_CONTROLLER_SFEM);
 	this->global_->nj_inim->add_list<core::strategy::control::IControlStrategy>(NJ_CONTROLLER_INIM);
 	this->global_->nj_ctrm->add_list<core::strategy::control::IControlStrategy>(NJ_CONTROLLER_CTRM);
@@ -474,6 +519,7 @@ void NJFactory<Env, App>::create_telemetry(){
 template<class Env, class App>
 void NJFactory<Env, App>::create_dataupdates(){
 	// 全モード共通でONの機器は最初にまとめてリストに加える
+	//Devices that are ON in all modes are added together in the list first.
 	datatype::List<core::devicedriver::IDataUpdatable> defaultUpdateList;
 	defaultUpdateList.add(*this->global_->nj_rtc);
 	defaultUpdateList.add(*this->global_->nj_adc);
@@ -499,6 +545,10 @@ void NJFactory<Env, App>::create_dataupdates(){
 		this->global_->nj_estm_mc->add_list<core::devicedriver::IDataUpdatable>(&(*it));
 		++it;
 	}
+
+	//Below are the components specific to each mode
+
+//Safe Mode ->default only
 	//以下各モード固有のコンポーネント群
 
 	//Safe Mode ->defaultのみ
@@ -580,6 +630,7 @@ void NJFactory<Env, App>::create_dataupdates(){
 template<class Env, class App>
 void NJFactory<Env, App>::create_switches(){
 	// 全モード共通でONの機器は最初にまとめてリストに加える
+	//Devices that are ON in all modes are added together in the list first.
 	datatype::List<core::devicedriver::ISwitchable> defaultSwitchList;
 	defaultSwitchList.add(*this->global_->nj_rtc);
 	defaultSwitchList.add(*this->global_->nj_adc);
@@ -606,6 +657,7 @@ void NJFactory<Env, App>::create_switches(){
 		++it;
 	}
 	//以下各モード固有のコンポーネント群
+	//Below are the components specific to each mode
 
 	//Safe Mode ->defaultのみ
 
@@ -689,6 +741,10 @@ void NJFactory<Env, App>::create_functor(){
 	// モード変更関係のファンクタ
 	
 	//MEMSジャイロの値が0.001rad/s以下になったら初期安定化モード→粗姿勢制御モードへ
+	////////////////////////////////
+// Mode change functor
+//It's a sequel.
+//When the value of the MEMS gyro becomes 0.001rad/s or less, initial stabilization mode → coarse attitude control mode
 	this->global_->nj_inim->add_list<functor::IFunctor>(
 		new functor::Functor<functor::Is_Under<datatype::StaticVector<3>>, functor::ModeChangeFunc>
 			(
@@ -698,6 +754,7 @@ void NJFactory<Env, App>::create_functor(){
 		);
 
 	//MEMSジャイロの値が0.002rad/s以上になったら粗姿勢制御モード→初期安定化モードへ
+	//When the value of MEMS gyro becomes 0.002rad/s or more, coarse attitude control mode → initial stabilization mode
 	this->global_->nj_ctrm->add_list<functor::IFunctor>(
 		new functor::Functor<functor::Is_Over<datatype::StaticVector<3>>, functor::ModeChangeFunc>
 			(
@@ -707,6 +764,7 @@ void NJFactory<Env, App>::create_functor(){
 		);
 
 	//FOGの値が0.0001rad/s以下になったら粗姿勢制御モード→精姿勢制御モードへ
+	//When the FOG value becomes 0.0001 rad/s or less, go to coarse attitude control mode → fine attitude control mode
 	this->global_->nj_ctrm->add_list<functor::IFunctor>(
 		new functor::Functor<functor::Is_Under<datatype::StaticVector<3>>, functor::ModeChangeFunc>
 			(
@@ -716,6 +774,7 @@ void NJFactory<Env, App>::create_functor(){
 		);
 
 	//FOGの値が0.0002rad/s以上になったら精姿勢制御モード→粗姿勢制御モードへ
+	//When the FOG value is 0.0002 rad/s or more, go to the fine attitude control mode → coarse attitude control mode
 	this->global_->nj_ccdm->add_list<functor::IFunctor>(
 		new functor::Functor<functor::Is_Over<datatype::StaticVector<3>>, functor::ModeChangeFunc>
 			(
@@ -725,6 +784,7 @@ void NJFactory<Env, App>::create_functor(){
 		);
 
 	//FOGの値が0.00001rad/s以下になったら精姿勢制御モード→観測モードへ
+	//When the value of FOG becomes 0.00001 rad/s or less, go to precise attitude control mode → observation mode
 	this->global_->nj_ctrm->add_list<functor::IFunctor>(
 		new functor::Functor<functor::Is_Under<datatype::StaticVector<3>>, functor::ModeChangeFunc>
 			(
@@ -734,6 +794,7 @@ void NJFactory<Env, App>::create_functor(){
 		);
 
 	//FOGの値が0.00002rad/s以上になったら観測モード→精姿勢制御モードへ
+	//When the FOG value is 0.00002rad/s or more, go to observation mode → precise attitude control mode
 	this->global_->nj_ccdm->add_list<functor::IFunctor>(
 		new functor::Functor<functor::Is_Over<datatype::StaticVector<3>>, functor::ModeChangeFunc>
 			(
@@ -744,6 +805,7 @@ void NJFactory<Env, App>::create_functor(){
 	typedef devicedriver::rw::RWBase<Env> RW;
 
 	//RWが1つでも飽和したらアンローディングモードへ
+	//If even one RW is saturated, go to unloading mode
 	functor::IFunctor* rwfunc1 = new functor::Functor<functor::Getter_Is<RW>, functor::ModeChangeFunc>
 		(
 			new functor::Getter_Is<RW>(this->global_->nj_rw1, &RW::is_saturated),
@@ -781,6 +843,7 @@ void NJFactory<Env, App>::create_functor(){
 	this->global_->nj_ccdm->add_list(rwfunc4);
 
 	//RWの角運動量が解放されたらふたたび粗制御モードへ
+	//When the angular momentum of RW is released, the coarse control mode is reentered.
 }
 
 template<class Env, class App>
